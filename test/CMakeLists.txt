@@ -9,4 +9,6 @@ include_directories(${HEADPATH})
 
 link_directories(${LIBSTATICPATH})
 link_libraries(${LIBRANDOMARRAY})
+link_libraries(${LIBRIGHTONE})
+link_libraries(${LIBBUBBLESORT})
 add_executable(${APPNAME} ${SRC_FILES})

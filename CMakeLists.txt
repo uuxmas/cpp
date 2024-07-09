@@ -12,6 +12,9 @@ set(HEADPATH ${PROJECT_SOURCE_DIR}/include)
 
 # 库文件名字
 set(LIBRANDOMARRAY randomArray)
+set(LIBRIGHTONE rightOne)
+set(LIBSWAPNUMS swapNums)
+set(LIBBUBBLESORT bubbleSort)
 
 # 应用的名字
 set(APPNAME test)
@@ -19,3 +22,4 @@ set(APPNAME test)
 # 添加子目录
 add_subdirectory(utils)
 add_subdirectory(test)
+add_subdirectory(sort)

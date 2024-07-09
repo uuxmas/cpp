@@ -14,7 +14,7 @@ std::pair<int *, int> randomArray(int maxSize, int maxValue)
     for (int i = 0; i < myRandom; i++)
     {
         arr[i] = rand() % maxValue;
-        std::cout << "random arr:" << arr[i] << std::endl;
+        //std::cout << "random arr:" << arr[i] << std::endl;
     }
 
     return std::make_pair(arr, myRandom);
