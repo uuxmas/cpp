@@ -7,7 +7,7 @@ std::pair<int *, int> randomArray(int maxSize, int maxValue)
 
     int myRandom = rand() % maxSize + 1;
 
-    std::cout << "random value:" << myRandom << std::endl;
+    // std::cout << "random value:" << myRandom << std::endl;
 
     int *arr = new int[myRandom]; // 创建一个 myRandom个元素的数组
 

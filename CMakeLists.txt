@@ -15,6 +15,9 @@ set(LIBRANDOMARRAY randomArray)
 set(LIBRIGHTONE rightOne)
 set(LIBSWAPNUMS swapNums)
 set(LIBBUBBLESORT bubbleSort)
+set(LIBINSERTSORT insertSort)
+set(LIBSELECTSORT selectSort)
+
 
 # 应用的名字
 set(APPNAME test)

@@ -8,7 +8,11 @@ set(EXECUTABLE_OUTPUT_PATH ${EXEPATH})
 include_directories(${HEADPATH})
 
 link_directories(${LIBSTATICPATH})
+
 link_libraries(${LIBRANDOMARRAY})
 link_libraries(${LIBRIGHTONE})
 link_libraries(${LIBBUBBLESORT})
+link_libraries(${LIBINSERTSORT})
+link_libraries(${LIBSELECTSORT})
+
 add_executable(${APPNAME} ${SRC_FILES})
