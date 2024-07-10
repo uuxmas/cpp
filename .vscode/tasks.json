@@ -3,7 +3,7 @@
 	"options": {
 		"cwd": "${workspaceFolder}/build"
 	},
-	//全局变量cwd：current working directory，在该目录下执行以下两个tasks
+	// 全局变量cwd：current working directory，在该目录下执行以下两个tasks
 	// July 10, 2024 @ACT by uuxmas
 	// 当前选中test.cpp后，开始run(F5)调试，并不在工作区内，而是工作区的test文件夹内，所以需要使用workspaceFolder
 	// workspaceFolder = /home/book/code/cpp/Algorithms
