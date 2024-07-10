@@ -1,5 +1,21 @@
+# system CMakeLists.txt
+
 cmake_minimum_required(VERSION 3.0)
 project(algorithms)
+
+# 宏定义
+
+# print开关
+# add_definitions(-DDEBUG)
+
+# 设置编译参数
+add_compile_options(-std=c++11 -Wall -g)
+
+# C++编译标准，上面可以实现，这里暂不使用
+# set(CMAKE_CXX_STANDARD 11)
+
+# 暂不使用
+# set(CMAKE_BUILD_TYPE "Debug")
 
 # 静态链接库地址
 set(LIBSTATICPATH ${PROJECT_SOURCE_DIR}/libstatic)
@@ -10,16 +26,18 @@ set(EXEPATH ${PROJECT_SOURCE_DIR}/bin)
 # 头文件地址
 set(HEADPATH ${PROJECT_SOURCE_DIR}/include)
 
-# 库文件名字
-set(LIBRANDOMARRAY randomArray)
+# 静态链接库文件名
+set(LIBRANDOMVECTOR randomVector)
 set(LIBRIGHTONE rightOne)
 set(LIBSWAPNUMS swapNums)
 set(LIBBUBBLESORT bubbleSort)
 set(LIBINSERTSORT insertSort)
 set(LIBSELECTSORT selectSort)
+set(LIBMERGESORT mergeSort)
+set(LIBSYSTEMSORT systemSort)
 
 
-# 应用的名字
+# 应用名
 set(APPNAME test)
 
 # 添加子目录

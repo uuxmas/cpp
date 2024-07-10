@@ -4,23 +4,23 @@
 
 // 简单排序之插入排序，样本小且基本有序时效率高
 // 扑克牌的插入
-int *insertSort(int *p, int len)
+void insertSort(std::vector<int> &vec)
 {
-    if (p == nullptr)
+    int n = vec.size();
+    
+    if (n <= 1)
     {
-        return p;
+        return;
     }
 
-    for (int i = 1; i < len; i++)
+    for (int i = 1; i < n; i++)
     {
         for (int j = i - 1; j >= 0; j--)
         {
-            if (*(p + j) > *(p + j + 1))
+            if (vec[j] > vec[j+1])
             {
-                swapNums(*(p + j), *(p + j + 1));
+                std::swap(vec[j], vec[j+1]);
             }
         }
     }
-
-    return p;
 }

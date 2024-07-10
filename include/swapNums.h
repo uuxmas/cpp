@@ -1,2 +1,2 @@
 #pragma once
-void swapNums(int &, int &);
+void swapNums(int &a, int &b);

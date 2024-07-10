@@ -1,3 +1,8 @@
 #pragma once
-#include "swapNums.h"
-int *insertSort(int *p, int len);
+#include <vector>
+/**
+ * @brief Sorts a vector of integers using insert sort algorithm.
+ *
+ * @param vec The vector of integers to be sorted.
+ */
+void insertSort(std::vector<int>& vec);

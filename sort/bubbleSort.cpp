@@ -3,19 +3,23 @@
 // 简单排序之插入排序，样本小且基本有序时效率高
 
 // 简单排序之冒泡排序，太慢
-int *bubbleSort(int *p, int len)
+void bubbleSort(std::vector<int> &vec)
 {
-    for (int i = 0; i < len - 1; i++)
+    int n = vec.size();
+    
+    if (n <= 1)
     {
-        for (int j = 0; j < len - 1 - i; j++)
-        {
-            if (*(p+j)>*(p+j+1))
-            {
-                swapNums(*(p+j),*(p+j+1));
-            }
-            
-        }
+        return;
     }
 
-    return p;
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - 1 - i; j++)
+        {
+            if (vec[j] > vec[j + 1])
+            {
+                std::swap(vec[j], vec[j + 1]);
+            }
+        }
+    }
 }

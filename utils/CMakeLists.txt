@@ -1,12 +1,18 @@
+# utils CMakeLists.txt
+
 cmake_minimum_required(VERSION 3.0)
 project(utils)
 
+# 搜索源文件
 aux_source_directory(./ SRC_FILES)
 
-set(LIBRARY_OUTPUT_PATH ${LIBSTATICPATH})
-
+# 头文件位置路径
 include_directories(${HEADPATH})
 
-add_library(${LIBRANDOMARRAY} STATIC ${SRC_FILES})
+# 静态库输出路径
+set(LIBRARY_OUTPUT_PATH ${LIBSTATICPATH})
+
+# 工具静态库生成
+add_library(${LIBRANDOMVECTOR} STATIC ${SRC_FILES})
 add_library(${LIBRIGHTONE} STATIC ${SRC_FILES})
 add_library(${LIBSWAPNUMS} STATIC ${SRC_FILES})

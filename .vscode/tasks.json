@@ -1,0 +1,37 @@
+{
+	"version": "2.0.0",
+	"options": {
+		"cwd": "${workspaceFolder}/build"
+	},
+	// July 10, 2024 @ACT by uuxmas
+	// 当前选中test.cpp后，开始run(F5)调试，并不在工作区内，而是工作区的test文件夹内，所以需要使用workspaceFolder
+	// workspaceFolder = /home/book/code/cpp/Algorithms
+	// fileDirname = /home/book/code/cpp/Algorithms/test
+	// workspaceFolderBasename = /home/book/code/cpp/Algorithms/Algorithms
+	// fileWorkspaceFolderBasename = /home/book/code/cpp/Algorithms/Algorithms
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "cmake",
+			"command": "cmake",
+			"args": [
+				".."
+			],
+		},
+		{
+			"label": "make",
+			"command": "make",
+			"args": [
+				"-j64"
+			],
+		},
+		{
+			"label": "uuxmas automatically build with cmake before gdb debug",
+			"dependsOn": [
+				"cmake",
+				"make"
+			],
+			"dependsOrder": "sequence",
+		},
+	]
+}
