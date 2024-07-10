@@ -6,7 +6,7 @@
 #include "mergeSort.h"
 #include "systemSort.h"
 
-#define TESTTIME 5000 // 500000
+#define TESTTIME 10000 // 500000
 #define MAXSIZE 1000
 #define MAXVALUE 100
 
