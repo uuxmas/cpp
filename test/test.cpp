@@ -2,13 +2,13 @@
 #include "sort.h"
 #include "leetcode.h"
 
-#define TESTTIME 100 // 10000
-#define MAXSIZE 1000
+#define EPOCH 100    // 权重其次大
+#define MAXSIZE 1000 // 权重最大
 #define MAXVALUE 100
 
 void testSort()
 {
-    int testTime = TESTTIME;
+    int testTime = EPOCH;
     bool success = true;
 
     std::cout << "===============sort test in progress...==================" << std::endl;
@@ -36,20 +36,21 @@ void testSort()
             testVector4 == testVector5)
         {
 #ifdef DEBUG
-            std::cout << "Time " << TESTTIME - testTime << " OK" << std::endl;
+            std::cout << "Time " << EPOCH - testTime << " OK" << std::endl;
 #endif
         }
         else
         {
-            std::cout << "Time " << TESTTIME - testTime << " NG" << std::endl;
+            std::cout << "Time " << EPOCH - testTime << " NG" << std::endl;
             success = false;
             break;
         }
     }
 
-    std::cout << TESTTIME - testTime - 1 << "/" << TESTTIME << " rounds sort test complete" << std::endl;
+    std::cout << EPOCH - testTime - 1 << "/" << EPOCH << " rounds sort test complete" << std::endl;
     std::cout << (success ? "Everything is Okay" : "Opps,NG") << std::endl;
-    std::cout << "=========================================================" << std::endl << std::endl;
+    std::cout << "=========================================================" << std::endl
+              << std::endl;
 }
 
 void testLeetcode()
