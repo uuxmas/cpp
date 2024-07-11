@@ -1,4 +1,4 @@
-#include "leecode.h"
+#include "leetcode.h"
 
 int singleNumber_136(std::vector<int> &vec)
 {
@@ -64,14 +64,14 @@ int minimumSizeSubarraySum(std::vector<int> &nums, int target)
     int sum = 0;
     int start = 0;
     int end = 0;
-
+    // 子数组中连续元素之和大于等于target值时，满足要求的子数组中的数组元素个数最少是多少
     while (end < size)
     {
-        sum += nums[end++];
+        sum += nums[end++];//尾指针逐渐后移，满足要求时停止
         while (sum >= target)
         {
             min = (end - start) < min ? (end - start) : min;
-            sum -= nums[start++];
+            sum -= nums[start++];//满足要求后头指针逐渐后移
         }
     }
     return (min == __INT_MAX__) ? 0 : min;

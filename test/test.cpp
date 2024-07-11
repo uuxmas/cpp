@@ -1,6 +1,6 @@
 #include "utils.h"
 #include "sort.h"
-#include "leecode.h"
+#include "leetcode.h"
 
 #define TESTTIME 100 // 10000
 #define MAXSIZE 1000
@@ -49,12 +49,12 @@ void testSort()
 
     std::cout << TESTTIME - testTime - 1 << "/" << TESTTIME << " rounds sort test complete" << std::endl;
     std::cout << (success ? "Everything is Okay" : "Opps,NG") << std::endl;
-    std::cout << "=========================================================" << std::endl;
+    std::cout << "=========================================================" << std::endl << std::endl;
 }
 
-void testLeecode()
+void testLeetcode()
 {
-    std::cout << "=============leecode test in progress...=================" << std::endl;
+    std::cout << "=============leetcode test in progress...================" << std::endl;
 
     // 有一个数字是唯一的，其他数字都是偶数个数，139
     std::vector<int> vec1{80, 285, 80, 70, 139, 285, 70};
@@ -90,7 +90,7 @@ void testLeecode()
 int main()
 {
     testSort();
-    testLeecode();
+    testLeetcode();
 
     // system("pause");linux没有pause命令
     return 0;

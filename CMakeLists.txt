@@ -29,7 +29,7 @@ set(HEADPATH ${PROJECT_SOURCE_DIR}/include)
 # 静态链接库名
 set(LIBUTILS utils)
 set(LIBSORT sort)
-set(LIBLEECODE leecode)
+set(LIBLEETCODE leetcode)
 
 # 应用名
 set(APPTEST test)
@@ -37,6 +37,6 @@ set(APPTEST test)
 # 添加子目录
 add_subdirectory(utils)
 add_subdirectory(sort)
-add_subdirectory(leecode)
+add_subdirectory(leetcode)
 
 add_subdirectory(test)

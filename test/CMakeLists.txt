@@ -17,7 +17,7 @@ set(EXECUTABLE_OUTPUT_PATH ${EXEPATH})
 # 引用链接库的名字
 link_libraries(${LIBUTILS})
 link_libraries(${LIBSORT})
-link_libraries(${LIBLEECODE})
+link_libraries(${LIBLEETCODE})
 
 # 引用链接库的位置路径
 link_directories(${LIBSTATICPATH})
