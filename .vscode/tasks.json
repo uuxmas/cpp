@@ -1,8 +1,7 @@
 {
 	"version": "2.0.0",
-	"options": {
-		"cwd": "${workspaceFolder}/build"
-	},
+	// 改为自动判断build文件是否存在，无则创立，否则进入执行cmake
+	// July 11, 2024 @ACT by uuxmas
 	// 全局变量cwd：current working directory，在该目录下执行以下两个tasks
 	// July 10, 2024 @ACT by uuxmas
 	// 当前选中test.cpp后，开始run(F5)调试，并不在工作区内，而是工作区的test文件夹内，所以需要使用workspaceFolder
@@ -13,11 +12,24 @@
 	"tasks": [
 		{
 			"type": "shell",
+			"label": "create build if not exist",
+			// bash作为一个可执行文件，本身也带有一些命令行参数
+			// 若用-c参数，则bash从字符串中读入命令
+			"command": "bash",
+			"args": [
+				"-c",
+				"if [ ! -d \"${workspaceFolder}/build\" ]; then mkdir ${workspaceFolder}/build; fi"
+			],
+		},
+		{
 			"label": "cmake",
 			"command": "cmake",
 			"args": [
 				".."
 			],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			}
 		},
 		{
 			"label": "make",
@@ -25,10 +37,14 @@
 			"args": [
 				"-j64"
 			],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			}
 		},
 		{
 			"label": "uuxmas automatically build with cmake before gdb debug",
 			"dependsOn": [
+				"create build if not exist",
 				"cmake",
 				"make"
 			],

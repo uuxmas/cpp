@@ -13,6 +13,4 @@ include_directories(${HEADPATH})
 set(LIBRARY_OUTPUT_PATH ${LIBSTATICPATH})
 
 # 工具静态库生成
-add_library(${LIBRANDOMVECTOR} STATIC ${SRC_FILES})
-add_library(${LIBRIGHTONE} STATIC ${SRC_FILES})
-add_library(${LIBSWAPNUMS} STATIC ${SRC_FILES})
+add_library(${LIBUTILS} STATIC ${SRC_FILES})

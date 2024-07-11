@@ -1,4 +1,4 @@
-# system CMakeLists.txt
+# algorithms CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.0)
 project(algorithms)
@@ -9,7 +9,7 @@ project(algorithms)
 # add_definitions(-DDEBUG)
 
 # 设置编译参数
-add_compile_options(-std=c++11 -Wall -g)
+add_compile_options(-std=c++11 -Wall)
 
 # C++编译标准，上面可以实现，这里暂不使用
 # set(CMAKE_CXX_STANDARD 11)
@@ -26,21 +26,17 @@ set(EXEPATH ${PROJECT_SOURCE_DIR}/bin)
 # 头文件地址
 set(HEADPATH ${PROJECT_SOURCE_DIR}/include)
 
-# 静态链接库文件名
-set(LIBRANDOMVECTOR randomVector)
-set(LIBRIGHTONE rightOne)
-set(LIBSWAPNUMS swapNums)
-set(LIBBUBBLESORT bubbleSort)
-set(LIBINSERTSORT insertSort)
-set(LIBSELECTSORT selectSort)
-set(LIBMERGESORT mergeSort)
-set(LIBSYSTEMSORT systemSort)
-
+# 静态链接库名
+set(LIBUTILS utils)
+set(LIBSORT sort)
+set(LIBLEECODE leecode)
 
 # 应用名
-set(APPNAME test)
+set(APPTEST test)
 
 # 添加子目录
 add_subdirectory(utils)
-add_subdirectory(test)
 add_subdirectory(sort)
+add_subdirectory(leecode)
+
+add_subdirectory(test)

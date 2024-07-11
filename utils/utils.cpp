@@ -1,6 +1,6 @@
-#include "randomVector.h"
+#include "utils.h"
 
-void randomVector(int maxSize, int maxValue, std::vector<int>& vec)
+void randomVector(int maxSize, int maxValue, std::vector<int> &vec)
 {
     std::srand(std::time(0));
 
@@ -10,4 +10,9 @@ void randomVector(int maxSize, int maxValue, std::vector<int>& vec)
     {
         vec.push_back(rand() % maxValue);
     }
+}
+
+int rightOne(int &num)
+{
+    return num & (~num + 1);
 }

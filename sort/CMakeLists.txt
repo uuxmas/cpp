@@ -21,8 +21,4 @@ set(LIBRARY_OUTPUT_PATH ${LIBSTATICPATH})
 # link_directories(${LIBSTATICPATH})
 
 # 排序算法静态库生成
-add_library(${LIBBUBBLESORT} STATIC ${SRC_FILES})
-add_library(${LIBINSERTSORT} STATIC ${SRC_FILES})
-add_library(${LIBSELECTSORT} STATIC ${SRC_FILES})
-add_library(${LIBMERGESORT} STATIC ${SRC_FILES})
-add_library(${LIBSYSTEMSORT} STATIC ${SRC_FILES})
+add_library(${LIBSORT} STATIC ${SRC_FILES})

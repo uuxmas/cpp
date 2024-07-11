@@ -1,4 +1,73 @@
-#include "mergeSort.h"
+#include "sort.h"
+
+// 简单排序之冒泡排序，太慢
+// 简单排序之选择排序，不稳定
+// 简单排序之插入排序，样本小且基本有序时效率高，类似扑克牌的插入
+
+void bubbleSort(std::vector<int> &vec)
+{
+    int n = vec.size();
+    
+    if (n <= 1)
+    {
+        return;
+    }
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - 1 - i; j++)
+        {
+            if (vec[j] > vec[j + 1])
+            {
+                std::swap(vec[j], vec[j + 1]);
+            }
+        }
+    }
+}
+
+void selectSort(std::vector<int>& vec)
+{
+    int n = vec.size();
+
+    if (n <= 1)
+    {
+        return;
+    }
+    
+    for (int i = 0; i < n - 1; i++)
+    {
+        int minIndex = i;
+        for (int j = i + 1; j < n; j++)
+        {
+            minIndex = vec[minIndex] > vec[j] ? j : minIndex;
+        }
+        if (i != minIndex)
+        {
+            std::swap(vec[i], vec[minIndex]);
+        }
+    }
+}
+
+void insertSort(std::vector<int> &vec)
+{
+    int n = vec.size();
+    
+    if (n <= 1)
+    {
+        return;
+    }
+
+    for (int i = 1; i < n; i++)
+    {
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (vec[j] > vec[j+1])
+            {
+                std::swap(vec[j], vec[j+1]);
+            }
+        }
+    }
+}
 
 // 已经排序好了的两个数组，进行合并
 // 合并排序
@@ -72,4 +141,9 @@ void mergeSort(std::vector<int> & v)
         return;
     }
     mergeSort(v, 0, n - 1);
+}
+
+void systemSort(std::vector<int> &vec)
+{
+    std::sort(vec.begin(), vec.end(), std::less<int>());
 }
