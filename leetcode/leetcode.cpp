@@ -57,7 +57,7 @@ std::vector<int> twoNumbers(std::vector<int> &vec)
     return std::vector<int>{num1, num2};
 }
 
-int minimumSizeSubarraySum(std::vector<int> &nums, int target)
+int minimumSizeSubarraySum_209(std::vector<int> &nums, int target)
 {
     int min = __INT_MAX__;
     int size = nums.size();

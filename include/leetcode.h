@@ -32,4 +32,4 @@ std::vector<int> twoNumbers(std::vector<int> &vec);
  * return the minimal length of a consecutive subarray whose sum is greater than or equal to target.
  * If there is no such subarray, return 0 instead.
  */
-int minimumSizeSubarraySum(std::vector<int> &nums, int target);
+int minimumSizeSubarraySum_209(std::vector<int> &nums, int target);
