@@ -9,7 +9,7 @@ project(algorithms)
 # add_definitions(-DDEBUG)
 
 # 设置编译参数
-add_compile_options(-std=c++11 -Wall)
+add_compile_options(-std=c++11 -Wall -g)
 
 # C++编译标准，上面可以实现，这里暂不使用
 # set(CMAKE_CXX_STANDARD 11)

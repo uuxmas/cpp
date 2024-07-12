@@ -32,4 +32,23 @@ std::vector<int> twoNumbers(std::vector<int> &vec);
  * return the minimal length of a consecutive subarray whose sum is greater than or equal to target.
  * If there is no such subarray, return 0 instead.
  */
-int minimumSizeSubarraySum_209(std::vector<int> &nums, int target);
+int minimumSizeSubarraySum_209(std::vector<int> &vec, int target);
+
+/**
+ * 给定一个数组，每一个元素左边比该元素小的所有元素之和，这些和的总和就是该数组的小和。
+ */
+int smallSum_main(std::vector<int> &vec);
+int smallSum_process(std::vector<int> &vec, int l, int r);
+int smallSum_merge(std::vector<int> &vec, int l, int m, int r);
+
+/**
+ * 给定一个数组，左边大于右边的元素，算作一个逆序对，求出所有的逆序对的数量。
+ */
+int reversePair_main(std::vector<int> &vec);
+int reversePair_process(std::vector<int> &vec, int l, int r);
+int reversePair_merge(std::vector<int> &vec, int l, int m, int r);
+
+/**
+ * 给定一个数组， 一个目标数，要求将小于目标数的放在左边，等于目标数的在中间，大于目标数的放在右边。
+ */
+void dutchFlagI(std::vector<int> &vec, int l, int r, int target);

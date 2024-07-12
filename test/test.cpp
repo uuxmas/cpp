@@ -2,9 +2,19 @@
 #include "sort.h"
 #include "leetcode.h"
 
-#define EPOCH 100    // 权重其次大
+#define EPOCH 10000   // 权重其次大
 #define MAXSIZE 1000 // 权重最大
 #define MAXVALUE 100
+
+void testUtils()
+{
+    std::vector<int> vec{2, 8, 9, 5, 6, 3, 4, 7, 1};
+    int max = maxRecursive(vec, 0, vec.size() - 1);
+    std::cout << "===============utils test in progress...=================" << std::endl;
+    std::cout << "max = " << max << std::endl;
+    std::cout << "=========================================================" << std::endl
+              << std::endl;
+}
 
 void testSort()
 {
@@ -23,17 +33,24 @@ void testSort()
         std::vector<int> testVector3 = v;
         std::vector<int> testVector4 = v;
         std::vector<int> testVector5 = v;
+        std::vector<int> testVector6 = v;
+        std::vector<int> testVector7 = v;
 
         bubbleSort(testVector1);
         insertSort(testVector2);
         selectSort(testVector3);
         mergeSort(testVector4);
         systemSort(testVector5);
+        quickSort(testVector6);
+        radixSort(testVector7);
 
         if (testVector1 == testVector2 &&
             testVector2 == testVector3 &&
             testVector3 == testVector4 &&
-            testVector4 == testVector5)
+            testVector4 == testVector5 &&
+            testVector5 == testVector6 &&
+            testVector6 == testVector7
+            )
         {
 #ifdef DEBUG
             std::cout << "Time " << EPOCH - testTime << " OK" << std::endl;
@@ -86,13 +103,38 @@ void testLeetcode()
     int min = minimumSizeSubarraySum_209(vec4, target);
     std::cout << "min = " << min << std::endl;
     std::cout << "=========================================================" << std::endl;
+
+    std::vector<int> vec5{1, 3, 4, 2, 5};
+    int smallSum = smallSum_main(vec5);
+    std::cout << "small sum = " << smallSum << std::endl;
+    std::cout << "=========================================================" << std::endl;
+
+    // std::vector<int> vec6{7, 5, 6, 4}; // 5
+    std::vector<int> vec6{9, 7, 5, 4, 6}; // 8
+    int reversePair = reversePair_main(vec6);
+    std::cout << "reverse pairs = " << reversePair << std::endl;
+    std::cout << "=========================================================" << std::endl;
+
+    std::vector<int> vec7{2,0,2,1,1,0};
+    int r = vec7.size();
+    int num = 2;
+    dutchFlagI(vec7, 0, r - 1, num);
+    std::cout << "Dutch flag problem: ";
+    for (auto &item : vec7)
+    {
+        std::cout << item << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "=========================================================" << std::endl
+              << std::endl;
+
 }
 
 int main()
 {
+    testUtils();
     testSort();
     testLeetcode();
-
     // system("pause");linux没有pause命令
     return 0;
 }
