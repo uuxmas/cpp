@@ -253,7 +253,7 @@ void radixSort(std::vector<int> &vec)
             count[k]++;
         }
 
-        for (int j = 1; j < 10; j++) // 关键的一步，用来计算未来入桶的位置
+        for (int j = 1; j < 10; j++) // 桶中所代表的数字，在后续数组中所处的位置，未来入桶的位置
         {
             count[j] = count[j - 1] + count[j];
         }
@@ -264,13 +264,223 @@ void radixSort(std::vector<int> &vec)
             *(p + count[k] - 1) = *item;
             count[k]--;
         }
-        vec.clear();//清空，不然push的时候是追加了
+        vec.clear(); // 清空，不然push的时候是追加了
         for (int m = 0; m < len; m++)
         {
-            vec.push_back(*(p+m)); // 出桶，进行下一轮的十位数的排序
+            vec.push_back(*(p + m)); // 出桶，进行下一轮的十位数的排序，此时，vec的内容已经被重新改写
         }
     }
 
-    delete [] p;
+    delete[] p;
     p = nullptr;
+}
+
+// 手写一个堆，并对其进行堆排序，系统虽然有现成的堆结构（如优先级队列），但是个黑盒，只有push（添加元素时就是堆化的过程），pop（堆化后的弹出都是最大或者最小值）的操作，
+// 如果需要操作堆里面的某个节点，对其进行相关操作，就不方便了，所以得自己写堆
+// 面试时经常让手写堆，系统提供的现成的堆结构，如优先级队列，priority_queue，在C++中的实现是大根堆，java中默认是小根堆
+
+// 从某个位置开始heap up，大根堆
+void bigRootHeapUp(std::vector<int> &vec, int index)
+{
+    while (index > 0) // 根节点前，就一直跟父节点比较，大，则交换，小则提前退出
+    {
+        if (vec[index] > vec[(index - 1) >> 1])
+        {
+            std::swap(vec[index], vec[(index - 1) >> 1]);
+            index = (index - 1) >> 1; // 指针上移，继续循环
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+
+// 从某个位置开始heap up，小根堆
+void smallRootHeapUp(std::vector<int> &vec, int index)
+{
+    while (index > 0) // 根节点前，就一直跟父节点比较，小，则交换，大则提前退出
+    {
+        if (vec[index] < vec[(index - 1) >> 1])
+        {
+            std::swap(vec[index], vec[(index - 1) >> 1]);
+            index = (index - 1) >> 1; // 指针上移，继续循环
+        }
+        else
+        {
+            break;
+        }
+    }
+}
+
+// 从某个位置开始heap down
+void bigRootHeapDown(std::vector<int> &vec, int index)
+{
+    if (vec.size() == 0)
+    {
+        return;
+    }
+
+    int heapSize = vec.size() - 1;
+    int p = index;
+
+    int l = (p << 1) + 1;
+    int r = (p << 1) + 2;
+
+    while (l <= heapSize) // 有左孩子，没有左孩子就直接退出
+    {
+        int largeChild = (r <= heapSize && vec[r] > vec[l]) ? r : l; // 有右孩，且右孩大，给右孩的指针，
+                                                                     // 否则没有右孩或者有右孩但小于左孩，则给左孩的指针
+        if (vec[largeChild] > vec[p])                                // 最大孩跟父比，大，则跟父换
+        {
+            std::swap(vec[largeChild], vec[p]);
+            p = largeChild; // 继续以孩的视角，继续下行堆化
+            l = (p << 1) + 1;
+            r = (p << 1) + 2;
+        }
+        else
+        {
+            break; // 孩都很小，则退出
+        }
+    }
+}
+
+// 从某个位置开始heap down
+void smallRootHeapDown(std::vector<int> &vec, int index)
+{
+    if (vec.size() == 0)
+    {
+        return;
+    }
+
+    int heapSize = vec.size() - 1;
+    int p = index;
+
+    int l = (p << 1) + 1;
+    int r = (p << 1) + 2;
+
+    while (l <= heapSize) // 有左孩子，没有左孩子就直接退出
+    {
+        int smallChild = (r <= heapSize && vec[r] < vec[l]) ? r : l; // 有右孩，且右孩小，给右孩的指针，
+                                                                     // 否则没有右孩或者有右孩但小于左孩，则给左孩的指针
+        if (vec[smallChild] < vec[p])                                // 最大孩跟父比，大，则跟父换
+        {
+            std::swap(vec[smallChild], vec[p]);
+            p = smallChild; // 继续以孩的视角，继续下行堆化
+            l = (p << 1) + 1;
+            r = (p << 1) + 2;
+        }
+        else
+        {
+            break; // 孩都很大，则退出
+        }
+    }
+}
+
+// heap sort，从大根堆的尾部弹出是大的数字
+void bigRootHeapSort(std::vector<int> &vec)
+{
+    int n = vec.size();
+
+    // 从0开始，逐个上堆化，最终变成大根堆O(NlogN)
+    // for (int i = 0; i < n; i++)//O(N) 一共执行N次
+    // {
+    //     bigRootHeapUp(vec, i);//O(logN)每一次的时间复杂度，都是O(logN)
+    // }
+
+    // runtime complexity = O(N)，why？answer：
+    // geometric sequence 等比数列
+    // vec中一共有N个节点，其中，N/2个节点都是叶节点，所以无需堆化，但每个叶节点也算一次操作（就算进来看一眼），时间复杂度1
+    // N/4是倒数第二层，这里的每个节点都需要一次下行堆化，每个节点堆化后，再下到叶节点看一眼，所以这一层每个节点时间复杂度是2
+    // N/8是倒数第三层的数量，需要两次下行堆化再加看一眼，复杂度3。。。。
+    // T(N)  =  N/2 * 1  +  N/4 * 2  +  N/8 * 3 ........，两边同时乘以2得到第二个式子
+    // 第二个式子减去第一个式子，得到等比数列和，N+1-(1/2)^N，当N趋向无穷大时，结果是N，所以时间复杂度=O(N)
+    for (int i = n - 1; i >= 0; i--) // 从最后一个节点开始往回分别作下堆化
+    {
+        bigRootHeapDown(vec, i); // O(N)，比上面更快一些，对一个无序数组进行堆化，使用此方式会更快。
+    }
+
+    int *p = new int[n];
+
+    while (!vec.empty()) // O(N)
+    {
+        std::swap(vec[vec.size() - 1], vec[0]); // 此时vec已经是大根堆了，vec队首是最大值，把vec队首放到vec队尾
+
+        *p++ = vec.back(); // vec队尾放入另外的新临时数组，大根堆的尾部弹出的是大数字
+        vec.pop_back();    // 去掉vec的队尾
+
+        bigRootHeapDown(vec, 0); // O(logN)，从头开始作，所以跟从尾（上面那个过程）开始作，不一样的时间复杂度// 对刚换新队首的vec，从头位置0重新下行堆化，结束后，vec又是一个大根堆
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        vec.push_back(*(--p));
+    }
+
+    delete[] p;
+    p = nullptr;
+}
+
+// heap sort，从小根堆的尾部弹出是小的数字
+void smallRootHeapSort(std::vector<int> &vec)
+{
+    int n = vec.size();
+
+    // 从0开始，逐个上堆化，最终变成小根堆O(NlogN)
+    // for (int i = 0; i < n; i++)//O(N) 一共执行N次
+    // {
+    //     smallRootHeapUp(vec, i);//O(logN)每一次的时间复杂度，都是O(logN)
+    // }
+
+    // runtime complexity = O(N)，why？answer：
+    // geometric sequence 等比数列
+    // vec中一共有N个节点，其中，N/2个节点都是叶节点，所以无需堆化，但每个叶节点也算一次操作（就算进来看一眼），时间复杂度1
+    // N/4是倒数第二层，这里的每个节点都需要一次下行堆化，每个节点堆化后，再下到叶节点看一眼，所以这一层每个节点时间复杂度是2
+    // N/8是倒数第三层的数量，需要两次下行堆化再加看一眼，复杂度3。。。。
+    // T(N)  =  N/2 * 1  +  N/4 * 2  +  N/8 * 3 ........，两边同时乘以2得到第二个式子
+    // 第二个式子减去第一个式子，得到等比数列和，N+1-(1/2)^N，当N趋向无穷大时，结果是N，所以时间复杂度=O(N)
+    for (int i = n - 1; i >= 0; i--) // 从最后一个节点开始往回 分别作下堆化
+    {
+        smallRootHeapDown(vec, i); // O(N)，比上面更快一些，对一个无序数组进行堆化，使用此方式会更快。
+    }
+
+    int *p = new int[n];
+
+    while (!vec.empty()) // O(N)
+    {
+        std::swap(vec[vec.size() - 1], vec[0]); // 此时vec已经是小根堆了，vec队首是最小值，把vec队首放到vec队尾
+
+        *p++ = vec.back(); // vec队尾放入另外的新临时数组，小根堆的尾部弹出的是小数字
+        vec.pop_back();    // 去掉vec的队尾
+
+        smallRootHeapDown(vec, 0); // O(logN)，从头开始作，所以跟从尾（上面那个过程）开始作，不一样的时间复杂度// 对刚换新队首的vec，从头位置0重新下行堆化，结束后，vec又是一个小根堆
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        vec.push_back(*(--p));
+    }
+
+    std::reverse(vec.begin(), vec.end());
+
+    delete[] p;
+    p = nullptr;
+}
+
+// 对给定的一个vec作大堆化或小堆化
+void rootHeapify(std::vector<int> &vec, bool flag)
+{
+    int n = vec.size();
+
+    for (int i = n - 1; i >= 0; i--) // 从最后一个节点开始往回分别作下堆化
+    {
+        if (flag)
+        {
+            bigRootHeapDown(vec, i); // O(N)，比上面更快一些，对一个无序数组进行堆化，使用此方式会更快。
+        }
+        else
+        {
+            smallRootHeapDown(vec, i);
+        }
+    }
 }

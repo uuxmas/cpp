@@ -1,10 +1,8 @@
 #include "utils.h"
 #include "sort.h"
 #include "leetcode.h"
-
-#define EPOCH 10000   // 权重其次大
-#define MAXSIZE 1000 // 权重最大
-#define MAXVALUE 100
+#include "class.h"
+#include <queue>
 
 void testUtils()
 {
@@ -18,6 +16,11 @@ void testUtils()
 
 void testSort()
 {
+
+    const int EPOCH = 10;   // 权重其次大，取代宏定义会好一些
+    const int MAXSIZE = 10; // 权重最大
+    const int MAXVALUE = 100;
+
     int testTime = EPOCH;
     bool success = true;
 
@@ -35,6 +38,8 @@ void testSort()
         std::vector<int> testVector5 = v;
         std::vector<int> testVector6 = v;
         std::vector<int> testVector7 = v;
+        std::vector<int> testVector8 = v;
+        std::vector<int> testVector9 = v;
 
         bubbleSort(testVector1);
         insertSort(testVector2);
@@ -43,14 +48,17 @@ void testSort()
         systemSort(testVector5);
         quickSort(testVector6);
         radixSort(testVector7);
+        bigRootHeapSort(testVector8);
+        smallRootHeapSort(testVector9);
 
         if (testVector1 == testVector2 &&
             testVector2 == testVector3 &&
             testVector3 == testVector4 &&
             testVector4 == testVector5 &&
             testVector5 == testVector6 &&
-            testVector6 == testVector7
-            )
+            testVector6 == testVector7 &&
+            testVector7 == testVector8 &&
+            testVector8 == testVector9)
         {
 #ifdef DEBUG
             std::cout << "Time " << EPOCH - testTime << " OK" << std::endl;
@@ -68,6 +76,16 @@ void testSort()
     std::cout << (success ? "Everything is Okay" : "Opps,NG") << std::endl;
     std::cout << "=========================================================" << std::endl
               << std::endl;
+}
+
+bool compareLess(const int &a, const int &b)// 防止篡改，防止拷贝占用时间，所以常引用
+{
+    return a < b;//返回true，则返回第一个参数，是a，此时a是小，所以从小到大排序
+}
+
+bool compareGreater(const int &a, const int &b)// 防止篡改，防止拷贝占用时间，所以常引用
+{
+    return a > b;//返回true，则返回第一个参数，是a，此时a是大，所以是从大到小排序
 }
 
 void testLeetcode()
@@ -115,7 +133,7 @@ void testLeetcode()
     std::cout << "reverse pairs = " << reversePair << std::endl;
     std::cout << "=========================================================" << std::endl;
 
-    std::vector<int> vec7{2,0,2,1,1,0};
+    std::vector<int> vec7{2, 0, 2, 1, 1, 0};
     int r = vec7.size();
     int num = 2;
     dutchFlagI(vec7, 0, r - 1, num);
@@ -128,6 +146,136 @@ void testLeetcode()
     std::cout << "=========================================================" << std::endl
               << std::endl;
 
+    std::vector<int> vec8{17, 27, 25, 20, 26};
+    sortArrDistanceLessK(vec8, 2);
+
+    std::sort(vec8.begin(), vec8.end(), compareLess);
+    std::cout << "比较器的使用，返回为真，则第一个参数先出来" << std::endl;
+}
+
+void testCPP_constExpression()
+{
+    // 符号常量表,define和const修饰的叫做符号常量
+    // initialized with a constant expression
+    const int a = 10;   // a为常量，性质为常量的const值，值与内存无关，值存在符号常量表里，编译阶段不去内存中寻址取值
+    int *p = (int *)&a; // 取地址时，会分配一个内存地址，然后给p
+
+    *p = 100;
+
+    std::cout << "符号常量与内存地址是两个不同的地方，此时打印的是符号常量 " << a << std::endl;
+    std::cout << "符号常量与内存地址是两个不同的地方，此时打印的是内存地址 " << *p << std::endl;
+
+    int b = 80;
+    // not initialized with a constant expression
+    // 如果以普通变量初始化const修饰的变量 会立即开辟空间，不会有符号常量表的出现了
+    const int c = b; // c为常变量，性质为常变量的const量，值与内存相关联，编译阶段需要去内存中寻址取值
+    int *p6 = (int *)&c;
+
+    *p6 = 90;
+
+    std::cout << "性质为常变量，与内存相关联， " << c << std::endl;
+    std::cout << "性质为常变量，与内存相关联， " << *p6 << std::endl;
+
+    int m = 50;
+    std::cout << "size of int " << sizeof(m) << std::endl;
+
+    int *p1 = &m;
+    std::cout << "size of int * " << sizeof(p1) << std::endl;
+
+    int *p2 = new int[100];
+    std::cout << "size of int * " << sizeof(p2) << std::endl;
+
+    char k = 'B';
+    std::cout << "size of char " << sizeof(k) << std::endl;
+
+    char *p3 = &k;
+    std::cout << "size of char * " << sizeof(p3) << std::endl;
+    std::cout << "content * " << *p3 << std::endl;
+
+    char *p4 = new char[20]{1, 2, 3, 4, 5, 6};
+    std::cout << "size of char * " << sizeof(p4) << std::endl;
+
+    double *p5 = new double[20]{1.0, 2.23, 3, 4, 5, 6};
+    std::cout << "size of double * " << sizeof(p5) << std::endl;
+
+    delete[] p2;
+    delete[] p4;
+    p2 = nullptr;
+    p4 = nullptr;
+    p5 = nullptr;
+}
+
+void testCPP_class()
+{
+    // 常引用
+    // int b = 20;
+
+    // // 常指针
+    // int a = 10;
+    // const int *p1 = &a;
+    // // int *p2 = p1;//这里会报错
+    // int *p2 = const_cast<int *>(p1); // 强制转换成非 常指针
+    Hero h1;
+    Hero h2("nihao", 4, 11, 23);
+
+    std::cout << "h1 id " << h1.getId() << std::endl;
+    std::cout << "h1 name " << h1.getName() << std::endl;
+    std::cout << "h2 energy " << h2.getEnergy() << std::endl;
+    std::cout << "h2 name " << h2.getName() << std::endl;
+
+    MyArray<int> array1;
+    array1.push(1);
+    array1.push(2);
+    array1.push(3);
+    array1.push(4);
+    array1.push(5);
+    // array1.push(6);
+
+    for (int i = 0; i < array1.getSize(); i++)
+    {
+        std::cout << array1[i] << std::endl;
+    }
+
+    // array1[5] = 1000; 越界会产生段错误
+    array1[0] = 2000;
+
+    std::cout << array1[0] << std::endl;
+
+    MyArray<char> array2;
+    array2.push('A');
+    array2.push('B');
+    array2.push('C');
+    array2.push('D');
+    array2.push('E');
+    // array2.push('F');
+
+    for (int i = 0; i < array2.getSize(); i++)
+    {
+        std::cout << array2[i] << std::endl;
+    }
+
+    // array2[5] = 'G'; 越界会产生段错误
+    array2[0] = 'Z';
+
+    std::cout << array2[0] << std::endl;
+
+    MyArray<Hero> array3;
+    array3.push(Hero("you1", 1, 101, 51));
+    array3.push(Hero("you2", 2, 102, 52));
+    array3.push(Hero("you3", 3, 103, 53));
+    array3.push(Hero("you4", 4, 104, 54));
+    array3.push(Hero("you5", 5, 105, 55));
+
+    for (int i = 0; i < array3.getSize(); i++)
+    {
+        std::cout << array3[i] << std::endl;
+    }
+
+    std::cout << array3[0] << " " << array3[1] << " " << array3[2] << std::endl;
+
+    // array3[0] = Hero("me", 888, 88, 8888);
+
+    // std::cout << array3[0] << std::endl;
 }
 
 int main()
@@ -135,6 +283,17 @@ int main()
     testUtils();
     testSort();
     testLeetcode();
+    // testCPP_class();
+
+    std::vector<int> v{6, 12, 3, 8, 7, 4, 5, 4, 9, 1, 0};
+    // bigRootHeapSort(v);
+    rootHeapify(v, 1);
+
+    for (auto &item : v)
+    {
+        std::cout << item << std::endl;
+    }
+
     // system("pause");linux没有pause命令
     return 0;
 }

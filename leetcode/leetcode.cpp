@@ -237,3 +237,33 @@ void dutchFlagI(std::vector<int> &vec, int l, int r, int target)
         }
     }
 }
+
+// 给定一个数组，基本有序，无序的元素与有序的差值不大于k个
+// 如何使用最快的方式对该数组进行排序，k远小于数组的长度
+void sortArrDistanceLessK(std::vector<int> &vec, int k)
+{
+    std::priority_queue<int, std::vector<int>, std::greater<int>> q; // 小根堆，默认是大根堆
+    // std::priority_queue<int, std::vector<int>, std::less<int>> q; // 大根堆
+
+    int n = vec.size();
+    std::vector<int> v;
+
+    int i = 0;
+    for (; i <= k; i++)
+    {
+        q.push(vec[i]);
+    }
+    for (; i < n; i++)
+    {
+        v.push_back(q.top());
+        q.pop();
+        q.push(vec[i]);
+    }
+    while (!q.empty())
+    {
+        v.push_back(q.top());
+        q.pop();
+    }
+    
+    vec = v;
+}

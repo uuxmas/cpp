@@ -44,7 +44,13 @@
         "numbers": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "cstring": "cpp"
     },
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "pasteImage.path": "${currentFileDir}/images",
+    "pasteImage.namePrefix": "mk-",
+    "pasteImage.insertPattern": "![${imageFileNameWithoutExt}](${imageFilePath}${imageSyntaxSuffix}",
+    "pasteImage.defaultName": "",
+    "pasteImage.nameSuffix": ""
 }

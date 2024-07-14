@@ -30,6 +30,7 @@ set(HEADPATH ${PROJECT_SOURCE_DIR}/include)
 set(LIBUTILS utils)
 set(LIBSORT sort)
 set(LIBLEETCODE leetcode)
+set(LIBCLASS class)
 
 # 应用名
 set(APPTEST test)
@@ -38,5 +39,6 @@ set(APPTEST test)
 add_subdirectory(utils)
 add_subdirectory(sort)
 add_subdirectory(leetcode)
+add_subdirectory(class)
 
 add_subdirectory(test)
