@@ -264,6 +264,6 @@ void sortArrDistanceLessK(std::vector<int> &vec, int k)
         v.push_back(q.top());
         q.pop();
     }
-    
+
     vec = v;
 }

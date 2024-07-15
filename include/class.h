@@ -2,12 +2,13 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <stack>
 
 class Hero
 {
-friend std::ostream& operator<<(std::ostream& out, Hero& obj);
+    friend std::ostream &operator<<(std::ostream &out, Hero &obj);
 
-public : 
+public:
     Hero();
     Hero(std::string name, int id, int energy, int attack);
 
@@ -107,7 +108,10 @@ public:
         }
         else
         {
-            std::cout << "illegal index" << std::endl;
+            // 因为这里是异常，所以没有返回可行的数组，但是还必须有返回，不然编译器总是报警告
+            // control reaches end of non-void function
+            // 所以通过抛出异常，避免编译警告的发生
+            throw "illegal index!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
         }
     }
 
@@ -115,4 +119,35 @@ private:
     T *p;
     int size;
     int capacity;
+};
+
+class Node
+{
+public:
+    int data;
+    Node *next;
+
+public:
+    Node(int data);
+};
+
+class LinkList
+{
+private:
+    Node *head;
+    Node *tail;
+    Node *ReverseRecursivelyList(Node *&head);
+
+public:
+    LinkList();
+    void InsertFrontData(int data);
+    void PrintList();
+    void InsertBackData(int data);
+    void ReverseListI();
+    void ReverseListII();
+    Node *getHead();
+    void setHead(Node *&head);
+    void DeleteFront();
+    void DeleteBack();
+    void DeleteData(int data);
 };

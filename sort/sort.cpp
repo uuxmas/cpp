@@ -3,7 +3,7 @@
 // 简单排序之冒泡排序，太慢
 // 简单排序之选择排序，不稳定
 // 简单排序之插入排序，样本小且基本有序时效率高，类似扑克牌的插入
-
+// 稳定的排序
 void bubbleSort(std::vector<int> &vec)
 {
     int n = vec.size();
@@ -25,6 +25,7 @@ void bubbleSort(std::vector<int> &vec)
     }
 }
 
+// 不稳定的排序
 void selectSort(std::vector<int> &vec)
 {
     int n = vec.size();
@@ -48,6 +49,7 @@ void selectSort(std::vector<int> &vec)
     }
 }
 
+// 稳定的排序
 void insertSort(std::vector<int> &vec)
 {
     int n = vec.size();

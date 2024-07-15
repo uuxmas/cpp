@@ -78,14 +78,14 @@ void testSort()
               << std::endl;
 }
 
-bool compareLess(const int &a, const int &b)// 防止篡改，防止拷贝占用时间，所以常引用
+bool compareLess(const int &a, const int &b) // 防止篡改，防止拷贝占用时间，所以常引用
 {
-    return a < b;//返回true，则返回第一个参数，是a，此时a是小，所以从小到大排序
+    return a < b; // 返回true，则返回第一个参数，是a，此时a是小，所以从小到大排序
 }
 
-bool compareGreater(const int &a, const int &b)// 防止篡改，防止拷贝占用时间，所以常引用
+bool compareGreater(const int &a, const int &b) // 防止篡改，防止拷贝占用时间，所以常引用
 {
-    return a > b;//返回true，则返回第一个参数，是a，此时a是大，所以是从大到小排序
+    return a > b; // 返回true，则返回第一个参数，是a，此时a是大，所以是从大到小排序
 }
 
 void testLeetcode()
@@ -229,14 +229,28 @@ void testCPP_class()
     array1.push(3);
     array1.push(4);
     array1.push(5);
-    // array1.push(6);
 
     for (int i = 0; i < array1.getSize(); i++)
     {
-        std::cout << array1[i] << std::endl;
+        try
+        {
+            std::cout << array1[i] << std::endl;
+        }
+        catch (const char *e)
+        {
+            std::cerr << e << '\n';
+        }
     }
 
-    // array1[5] = 1000; 越界会产生段错误
+    try
+    {
+        array1[5] = 1000; // 越界会产生段错误
+    }
+    catch (const char *e)
+    {
+        std::cerr << e << '\n';
+    }
+
     array1[0] = 2000;
 
     std::cout << array1[0] << std::endl;
@@ -276,6 +290,44 @@ void testCPP_class()
     // array3[0] = Hero("me", 888, 88, 8888);
 
     // std::cout << array3[0] << std::endl;
+
+    // int *p = nullptr;
+    // *p = 10;
+    // std::cout << *p <<std::endl;
+    
+    LinkList myList;
+
+    myList.InsertFrontData(1);
+    myList.InsertFrontData(2);
+    // myList.InsertFrontData(3);
+    // myList.InsertFrontData(4);
+    // myList.InsertFrontData(5);
+    // myList.InsertFrontData(6);
+    
+    myList.PrintList();
+
+    //myList.ReverseListI();
+    //myList.ReverseListII();
+    //myList.PrintList();
+
+    // myList.DeleteBack();
+    // myList.DeleteBack();
+    // myList.DeleteBack();
+    // myList.DeleteBack();
+    // myList.DeleteBack();
+    // myList.DeleteFront();
+    // myList.DeleteFront();
+    // myList.DeleteFront();
+    // myList.DeleteFront();
+    // myList.DeleteFront();
+    // myList.DeleteFront();
+    myList.DeleteData(1);
+
+    myList.PrintList();
+
+
+    std::cout << "end" <<std::endl;
+
 }
 
 int main()
@@ -283,16 +335,7 @@ int main()
     testUtils();
     testSort();
     testLeetcode();
-    // testCPP_class();
-
-    std::vector<int> v{6, 12, 3, 8, 7, 4, 5, 4, 9, 1, 0};
-    // bigRootHeapSort(v);
-    rootHeapify(v, 1);
-
-    for (auto &item : v)
-    {
-        std::cout << item << std::endl;
-    }
+    testCPP_class();
 
     // system("pause");linux没有pause命令
     return 0;
