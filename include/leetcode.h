@@ -1,6 +1,10 @@
 #pragma once
 #include <vector>
 #include <queue>
+#include <unordered_map>
+#include "class.h"
+#include "utils.h"
+#include "sort.h"
 
 /**
  * @brief Given a non-empty array of integers nums, every element appears twice except for one.
@@ -53,3 +57,21 @@ void dutchFlagI(std::vector<int> &vec, int l, int r, int target);
 // 给定一个数组，基本有序，无序的元素与有序的位置上的差值不大于k个
 // 如何使用最快的方式对该数组进行排序，k远小于数组的长度
 void sortArrDistanceLessK(std::vector<int> &vec, int k);
+
+
+/**
+ * 两数之和，没有重复元素，返回满足要求的两个下标，但是，数组中同一个元素不能使用两遍。
+*/
+std::vector<int> twoSum_1(const std::vector<int> &vec, int target);
+
+/**
+ * 打印两个有序链表中相同的元素
+ */
+void orderedTwoListsSameElements();
+
+/**
+ * 判断链表是否为palindrome回文结构
+ */
+bool isPalindromeI(LinkList &myList);
+
+bool isPalindromeII(LinkList &myList);

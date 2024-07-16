@@ -57,7 +57,8 @@ std::vector<int> twoNumbers(std::vector<int> &vec)
 }
 
 /**
- * 用双指针 start 和 end 表示一个滑动窗口。
+ * 要求：子数组中连续元素之和大于等于target值时，满足要求的子数组中的数组元素个数最少是多少。
+ * 方法：用双指针 start 和 end 表示一个滑动窗口。
  * 1. end 向右移增大窗口，直到窗口内的数字和大于等于 target，进行第 2 步。
  * 2. 记录此时的长度，start 向右移动，开始减少长度，每减少一次，就更新最小长度。直到当前窗口内的数字和小于 target，回到第 1 步。
  */
@@ -68,7 +69,7 @@ int minimumSizeSubarraySum_209(std::vector<int> &vec, int target)
     int sum = 0;
     int start = 0;
     int end = 0;
-    // 子数组中连续元素之和大于等于target值时，满足要求的子数组中的数组元素个数最少是多少
+
     while (end < size)
     {
         sum += vec[end++]; // 尾指针逐渐后移，满足要求时停止
@@ -266,4 +267,177 @@ void sortArrDistanceLessK(std::vector<int> &vec, int k)
     }
 
     vec = v;
+}
+
+// 查询一个元素是否出现过，或者一个元素是否在集合里的时候，就要第一时间想到哈希法。
+// 遍历一遍哈希表
+std::vector<int> twoSum_1(const std::vector<int> &vec, int target)
+{
+    std::unordered_map<int, int> map;
+
+    int n = vec.size();
+
+    for (int i = 0; i < n; i++)
+    {
+        auto iterator = map.find(target - vec[i]);          // HashMap(哈希表)'s find returns an iterator，which is a pointer，不等于map.end()，则表示找到了
+        if (iterator != map.end() && iterator->second != i) // vector中同一个元素不能使用两遍，target=8，使用了两遍4
+        {
+            return std::vector<int>{iterator->second, i};
+        }
+        else
+        {
+            // map.insert(vec[i], i);
+            // c++ 中往hashmap中插入键值对，使用如下方式：vec[i]是key，i是value
+            map[vec[i]] = i;
+        }
+    }
+    return std::vector<int>{};
+}
+
+// 打印两个有序链表的功能部分
+// 两个指针分别指向两个链表的头部，一起右移，相等打印，否则谁小，谁右移，直到有一个指针结束
+void orderedTwoListsSameElements()
+{
+    LinkList myList1;
+    LinkList myList2;
+
+    std::vector<int> vec1;
+    std::vector<int> vec2;
+
+    const int MS = 10;
+    const int MV = 10;
+
+    randomVector(MS, MV, vec1);
+    randomVector(MS, MV, vec2);
+
+    quickSort(vec1);
+    quickSort(vec2);
+
+    for (int &item : vec1)
+    {
+        myList1.InsertBackData(item);
+    }
+
+    for (int &item : vec2)
+    {
+        myList2.InsertBackData(item);
+    }
+
+    myList1.PrintList();
+    myList2.PrintList();
+
+    // 已生成两个有序的链表
+    Node *p1 = myList1.getHead();
+    Node *p2 = myList2.getHead();
+
+    while (p1 != nullptr && p2 != nullptr)
+    {
+        if (p1->data == p2->data)
+        {
+            std::cout << "the same: " << p1->data << " ";
+            p1 = p1->next;
+            p2 = p2->next;
+            continue;
+        }
+        if (p1->data < p2->data)
+        {
+            p1 = p1->next;
+        }
+        else
+        {
+            p2 = p2->next;
+        }
+    }
+}
+
+// 判断给定的链表是否为回文
+bool isPalindromeI(LinkList &myList)
+{
+    std::stack<int> s;
+    bool res = true;
+    Node *p = myList.getHead();
+
+    while (p != nullptr) // 空间复杂度O(N)
+    {
+        s.push(p->data);
+        p = p->next;
+    }
+
+    p = myList.getHead(); // p指针复位重新从头开始
+
+    while (p != nullptr) // 时间复杂度O(N)
+    {
+        if (p->data == s.top())
+        {
+            s.pop();
+            p = p->next;
+            continue;
+        }
+        res = false;
+        break;
+    }
+
+    return res;
+}
+
+// 快慢指针，判断回文结构的链表，时间复杂度O(N)，空间复杂度O(1)
+bool isPalindromeII(LinkList &myList)
+{
+    bool res = true;
+
+    Node *slow = myList.getHead();
+    Node *fast = myList.getHead();
+
+    while ((fast != nullptr) && (fast->next != nullptr)) // 快指针结束，则结束，后续使用此时的慢指针，奇数和偶数同时考虑
+    {
+        slow = slow->next; // AAABBB，得到第一个B // AACBB，得到C
+        fast = fast->next->next;
+    }
+
+    // 反转开始
+    Node *cur = slow; // 使用慢指针，指向第一个B,或者指向了C
+    Node *prev = nullptr;
+    while (cur != nullptr) // 反转链表的后半部分
+    {
+        Node *tmp = cur->next; // 临时保存当前节点的下一个节点
+        cur->next = prev;      // 反转当前节点的指针
+        prev = cur;            // 前一个节点移到当前节点
+        cur = tmp;             // 当前节点移到下一个节点
+    }
+    // 反转结束，prev是右半部分反转后的链表的头
+
+    // 保存一份，以便后续再反转回来
+    Node *copy = prev;
+
+    // 左右两个链表同时开始比较，从外向内移动指针
+    Node *h1 = myList.getHead();
+    Node *h2 = prev;
+
+    // 使用前半部分进行结束的判断，因为这样奇偶都能覆盖上
+    // 前半部分最后一个节点，他的next还是指向slow这个节点，这点很重要！！！
+    while ((h1 != slow) && (h1->data == h2->data))
+    {
+        h1 = h1->next;
+        h2 = h2->next;
+    }
+
+    if (h1 != slow) // 说明有不相等的数据，提前跳出while循环
+    {
+        res = false;
+    }
+
+    // 恢复原来的链表
+    // 反转开始
+    Node *cur_ = copy; // 使用慢指针，指向第一个B,或者指向了C
+    Node *prev_ = nullptr;
+    while (cur_ != nullptr) // 反转链表的后半部分
+    {
+        Node *tmp_ = cur_->next; // 临时保存当前节点的下一个节点
+        cur_->next = prev_;      // 反转当前节点的指针
+        prev_ = cur_;            // 前一个节点移到当前节点
+        cur_ = tmp_;             // 当前节点移到下一个节点
+    }
+    // 反转结束，prev是右半部分反转后的链表的头
+
+    return res;
 }

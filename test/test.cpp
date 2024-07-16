@@ -151,6 +151,32 @@ void testLeetcode()
 
     std::sort(vec8.begin(), vec8.end(), compareLess);
     std::cout << "比较器的使用，返回为真，则第一个参数先出来" << std::endl;
+
+    std::vector<int> vec9{2, 4, 3, 4};
+    std::vector<int> res = twoSum_1(vec9, 8);
+    if (!res.empty()) // 不然会有段错误
+    {
+        std::cout << res[0] << " " << res[1] << "\n";
+    }
+
+    orderedTwoListsSameElements();
+
+    LinkList myList;
+    myList.InsertBackData(1);
+    myList.InsertBackData(3);
+    // myList.InsertBackData(8);
+    // myList.InsertBackData(8);
+    myList.InsertBackData(3);
+    myList.InsertBackData(1);
+    bool flag = isPalindromeII(myList);
+    std::cout << "\n\n\n"
+              << (flag == true ? "Palindrome true" : "Palindrome false") << "\n";
+    std::cout << "\n";
+
+    myList.PrintList();
+    //myList.ReverseListIII();
+    //myList.PrintList();
+    std::cout << "\n";
 }
 
 void testCPP_constExpression()
@@ -294,7 +320,7 @@ void testCPP_class()
     // int *p = nullptr;
     // *p = 10;
     // std::cout << *p <<std::endl;
-    
+
     LinkList myList;
 
     myList.InsertFrontData(1);
@@ -303,12 +329,12 @@ void testCPP_class()
     // myList.InsertFrontData(4);
     // myList.InsertFrontData(5);
     // myList.InsertFrontData(6);
-    
+
     myList.PrintList();
 
-    //myList.ReverseListI();
-    //myList.ReverseListII();
-    //myList.PrintList();
+    // myList.ReverseListI();
+    // myList.ReverseListII();
+    // myList.PrintList();
 
     // myList.DeleteBack();
     // myList.DeleteBack();
@@ -325,9 +351,7 @@ void testCPP_class()
 
     myList.PrintList();
 
-
-    std::cout << "end" <<std::endl;
-
+    std::cout << "end" << std::endl;
 }
 
 int main()

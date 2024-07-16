@@ -45,7 +45,8 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp",
-        "cstring": "cpp"
+        "cstring": "cpp",
+        "map": "cpp"
     },
     "cmake.configureOnOpen": false,
     "pasteImage.path": "${currentFileDir}/images",

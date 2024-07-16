@@ -2,7 +2,17 @@
 
 void randomVector(int maxSize, int maxValue, std::vector<int> &vec)
 {
-    std::srand(std::time(0));
+
+    // 获取当前时间点的毫秒部分作为种子
+    auto now = std::chrono::high_resolution_clock::now();
+    auto duration = now.time_since_epoch();
+    // auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    auto micros = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+
+    // 使用当前时间的微秒部分作为种子
+    std::srand(static_cast<unsigned int>(micros));
+
+    // std::srand(std::time(0));
 
     int myRandom = std::rand() % maxSize + 1;
 
@@ -47,5 +57,5 @@ int maxRecursive(std::vector<int> &vec, int l, int r)
 
 int powerRaise(int base, int exponent)
 {
-    return (int)(std::pow(base,exponent)+0.5);
+    return (int)(std::pow(base, exponent) + 0.5);
 }

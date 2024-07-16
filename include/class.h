@@ -137,6 +137,7 @@ private:
     Node *head;
     Node *tail;
     Node *ReverseRecursivelyList(Node *&head);
+    Node *ReverseIterateList(Node *&head);
 
 public:
     LinkList();
@@ -145,6 +146,7 @@ public:
     void InsertBackData(int data);
     void ReverseListI();
     void ReverseListII();
+    void ReverseListIII();
     Node *getHead();
     void setHead(Node *&head);
     void DeleteFront();

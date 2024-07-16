@@ -114,7 +114,7 @@ void LinkList::ReverseListI()
 
     std::stack<Node *> s;
 
-    while (cur != nullptr) // 压栈
+    while (cur != nullptr) // 压栈，空间复杂度O(N)，时间复杂度O(N)
     {
         s.push(cur);
         cur = cur->next;
@@ -141,10 +141,10 @@ void LinkList::ReverseListI()
 
 void LinkList::ReverseListII()
 {
+    // 链表反转，换头操作需要返回新的头指针，递归
     head = ReverseRecursivelyList(head);
 }
 
-// 链表反转，递归方法
 Node *LinkList::ReverseRecursivelyList(Node *&node)
 {
     if (node->next == nullptr)
@@ -157,6 +157,32 @@ Node *LinkList::ReverseRecursivelyList(Node *&node)
     node->next = nullptr;
     tail = node; // 别把尾巴忘了
     return cur;  // 最后需要有head来接这个返回值
+}
+
+void LinkList::ReverseListIII()
+{
+    // 链表反转，换头操作需要返回新的头指针，迭代
+    head = ReverseIterateList(head);
+}
+
+Node *LinkList::ReverseIterateList(Node *&head)
+{
+    Node *cur = head;
+    Node *prev = nullptr;
+
+    while (cur != nullptr)
+    {
+        Node *tmp = cur->next;
+        cur->next = prev;
+        if (prev == nullptr)
+        {
+            tail = cur; // 说明是第一个节点，也就是尾巴，让tail这个标签附上来
+        }
+        prev = cur;
+        cur = tmp;
+    }
+
+    return prev;
 }
 
 void LinkList::DeleteFront()

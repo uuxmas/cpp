@@ -3,6 +3,7 @@
 #include <vector>
 #include <ctime>
 #include <cmath>
+#include <chrono>
 
 /**
  * @brief Generate a vector of integers using random numbers.
