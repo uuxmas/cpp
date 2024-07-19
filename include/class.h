@@ -3,6 +3,8 @@
 #include <string>
 #include <cstring>
 #include <stack>
+#include <unordered_map>
+#include <queue>
 
 class Hero
 {
@@ -152,4 +154,63 @@ public:
     void DeleteFront();
     void DeleteBack();
     void DeleteData(int data);
+    int findData(int data);
+    void loopifyList(int index);
+};
+
+// 二叉树的节点定义,public定义成该类型，单链表也是，都需要定义成public类型
+class TNode
+{
+public:
+    int data;
+    TNode *left;
+    TNode *right;
+
+public:
+    TNode(int data);
+};
+
+class Tree
+{
+private:
+    TNode *root;
+
+private:
+    void TreePreOrderTraversalRecur(TNode *&node);  // 前序遍历
+    void TreeInOrderTraversalRecur(TNode *&node);   // 中序遍历
+    void TreePostOrderTraversalRecur(TNode *&node); // 后序遍历
+
+    void TreePreOrderTraversalUnRecur(TNode *&node);  // 前序非递归遍历
+    void TreeInOrderTraversalUnRecur(TNode *&node);   // 中序非递归遍历
+    void TreePostOrderTraversalUnRecur(TNode *&node); // 后序非递归遍历
+
+    std::string getSpace(int num);
+    void printInOrder(TNode *&node, int height, std::string to, int len);
+    bool isBSTRecur(TNode *&node, int *&preValue);
+    std::vector<int> isBSTRecurIII(TNode *&node);
+    bool isBSTIterator(TNode *&node);
+    std::pair<bool, int> isBBTRecur(TNode *&node);
+    std::pair<int,int> isFBTRecur(TNode *&node);
+
+public:
+    Tree();                     // tree的无参构造
+    void TreePrint();           // 打印tree
+    void TreeAddData(int data); // 添加数据到叶子上
+    void PreRecursive();
+    void PreUnRecur();  // 前序非递归
+    void InUnRecur();   // 中序非递归
+    void PostUnRecur(); // 后序非递归
+    void InRecursive();
+    void PostRecursive();
+    void levelOrder();
+    TNode *getRoot();
+    TNode *findTreeNode(int data);
+    void setRoot(TNode *&node);
+    int getTreeWidth();
+    bool isBinarySearchTreeI();
+    bool isBinarySearchTreeII();
+    bool isBinarySearchTreeIII();
+    bool isCompletedBinaryTree();
+    bool isBalanceBinaryTree();
+    bool isFullBinaryTree();
 };

@@ -152,7 +152,7 @@ void testLeetcode()
     std::sort(vec8.begin(), vec8.end(), compareLess);
     std::cout << "比较器的使用，返回为真，则第一个参数先出来" << std::endl;
 
-    std::vector<int> vec9{2, 4, 3, 4};
+    std::vector<int> vec9{2, 4, 3, 7};
     std::vector<int> res = twoSum_1(vec9, 8);
     if (!res.empty()) // 不然会有段错误
     {
@@ -166,17 +166,44 @@ void testLeetcode()
     myList.InsertBackData(3);
     // myList.InsertBackData(8);
     // myList.InsertBackData(8);
-    myList.InsertBackData(3);
-    myList.InsertBackData(1);
+    myList.InsertBackData(2);
+    myList.InsertBackData(7);
+    myList.InsertBackData(9);
+    myList.InsertBackData(5);
+    myList.InsertBackData(4);
     bool flag = isPalindromeII(myList);
     std::cout << "\n\n\n"
               << (flag == true ? "Palindrome true" : "Palindrome false") << "\n";
     std::cout << "\n";
 
     myList.PrintList();
-    //myList.ReverseListIII();
-    //myList.PrintList();
+    // myList.ReverseListIII();
+    // myList.PrintList();
     std::cout << "\n";
+
+    LinkList hisList;
+    hisList.InsertBackData(9);
+    hisList.InsertBackData(3);
+    // hisList.InsertBackData(12);
+    // hisList.InsertBackData(2);
+    hisList.InsertBackData(5);
+
+    // partitionList(hisList, 3);
+    //  hisList.PrintList();
+    //  std::cout << "\n";
+
+    // partitionListII(hisList, 1);
+
+    // hisList.PrintList();
+    // std::cout << "\n";
+
+    // Node *p = copyListWithRandNode(hisList);
+    // std::cout << "\n";
+
+    intersectLists(myList, hisList);
+
+    // TNode *p = lowestCommonAncestor();
+    // std::cout << "common ancestor node: " << p << " " << p->data << "\n";
 }
 
 void testCPP_constExpression()
@@ -325,10 +352,10 @@ void testCPP_class()
 
     myList.InsertFrontData(1);
     myList.InsertFrontData(2);
-    // myList.InsertFrontData(3);
-    // myList.InsertFrontData(4);
-    // myList.InsertFrontData(5);
-    // myList.InsertFrontData(6);
+    myList.InsertFrontData(3);
+    myList.InsertFrontData(4);
+    myList.InsertFrontData(5);
+    myList.InsertFrontData(6);
 
     myList.PrintList();
 
@@ -351,7 +378,78 @@ void testCPP_class()
 
     myList.PrintList();
 
-    std::cout << "end" << std::endl;
+    myList.findData(2);
+    myList.findData(6);
+
+    std::cout << "\n";
+
+    Tree myTree;
+
+    // TNode *p1 = new TNode(46);
+    // TNode *p2 = new TNode(20);
+    // TNode *p3 = new TNode(50);
+    // TNode *p4 = new TNode(45);
+    // TNode *p5 = new TNode(55);
+    // TNode *p6 = new TNode(6);
+    // TNode *p7 = new TNode(8);
+    for (int i = 1; i <= 31; i++)
+    {
+        myTree.TreeAddData(i * 10);
+    }
+
+    myTree.TreePrint();
+    // myTree.PreUnRecur();
+    // myTree.PreRecursive();
+    // myTree.InUnRecur();
+    // myTree.InRecursive();
+    // myTree.PostUnRecur();
+    // myTree.PostRecursive();
+
+    std::cout << "\n";
+
+    myTree.levelOrder();
+
+    std::cout << "\n";
+
+    std::cout << "tree max width: " << myTree.getTreeWidth() << std::endl;
+
+    std::cout << "\n";
+
+    bool isFlag = myTree.isBinarySearchTreeI();
+    std::cout << "is binary search tree I: " << isFlag << "\n";
+    isFlag = myTree.isBinarySearchTreeII();
+    std::cout << "is binary search tree II: " << isFlag << "\n";
+
+    isFlag = myTree.isCompletedBinaryTree();
+    std::cout << "is completed binary tree: " << isFlag << "\n";
+
+    isFlag = myTree.isBalanceBinaryTree();
+    std::cout << "is balanced binary tree: " << isFlag << "\n";
+
+    // std::cout <<"std::min: " <<std::min(std::min(10,2),3) <<"\n";
+    // std::cout <<"std::min: " <<std::min({10,3,2},[](int a, int b){return a<b;})<< "\n";
+    isFlag = myTree.isBinarySearchTreeIII();
+    std::cout << "is binary search tree: " << isFlag << "\n";
+
+    isFlag = myTree.isFullBinaryTree();
+    std::cout << "is full binary tree: " << isFlag << "\n";
+
+    std::cout << "find address of node data = 0 :" << myTree.findTreeNode(0) << "\n";
+
+    TNode *node1 = myTree.findTreeNode(300);
+    TNode *node2 = myTree.findTreeNode(160);
+    
+    // 没有换行符的话，控制台是不会输出打印内容的，直到遇到\n换行符！！！！！
+    std::cout << "find address of 3 nodes: " << "\n";
+
+    TNode *res1 = lowestCommonAncestor(myTree.getRoot(), node1, node2);
+    std::cout << res1 << "  " << "  " << node1 << "  " << node2 << "\n";
+
+    TNode *res2 = lowestCommonAncestorII(myTree.getRoot(), node1, node2);   
+    std::cout << res2 << "  " << "  " << node1 << "  " << node2 << "\n";
+
+    std::cout << "\n";
+    std::cout << "\n";
 }
 
 int main()

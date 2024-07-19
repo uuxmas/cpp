@@ -275,14 +275,15 @@ std::vector<int> twoSum_1(const std::vector<int> &vec, int target)
 {
     std::unordered_map<int, int> map;
 
-    int n = vec.size();
+    std::size_t n = vec.size();
 
-    for (int i = 0; i < n; i++)
+    for (std::size_t i = 0; i < n; i++)
     {
-        auto iterator = map.find(target - vec[i]);          // HashMap(哈希表)'s find returns an iterator，which is a pointer，不等于map.end()，则表示找到了
-        if (iterator != map.end() && iterator->second != i) // vector中同一个元素不能使用两遍，target=8，使用了两遍4
+        auto iterator = map.find(target - vec[i]); // HashMap(哈希表)'s find returns an iterator，which is a pointer，不等于map.end()，则表示找到了
+        // if (iterator != map.end() && iterator->second != i) // vector中同一个元素不能使用两遍，target=8，使用了两遍4
+        if (iterator != map.end()) // 如果是先插入的话，再查的话，会用到同一个元素vector中同一个元素不能使用两遍，target=8，使用了两遍4
         {
-            return std::vector<int>{iterator->second, i};
+            return std::vector<int>{iterator->second, static_cast<int>(i)};
         }
         else
         {
@@ -357,7 +358,7 @@ bool isPalindromeI(LinkList &myList)
     bool res = true;
     Node *p = myList.getHead();
 
-    while (p != nullptr) // 空间复杂度O(N)
+    while (p != nullptr) // extra space 空间复杂度O(N)
     {
         s.push(p->data);
         p = p->next;
@@ -415,7 +416,7 @@ bool isPalindromeII(LinkList &myList)
 
     // 使用前半部分进行结束的判断，因为这样奇偶都能覆盖上
     // 前半部分最后一个节点，他的next还是指向slow这个节点，这点很重要！！！
-    while ((h1 != slow) && (h1->data == h2->data))
+    while ((h1 != slow) && (h1->data == h2->data)) // check palindrome
     {
         h1 = h1->next;
         h2 = h2->next;
@@ -426,7 +427,7 @@ bool isPalindromeII(LinkList &myList)
         res = false;
     }
 
-    // 恢复原来的链表
+    // 恢复原来的链表 recover list
     // 反转开始
     Node *cur_ = copy; // 使用慢指针，指向第一个B,或者指向了C
     Node *prev_ = nullptr;
@@ -440,4 +441,401 @@ bool isPalindromeII(LinkList &myList)
     // 反转结束，prev是右半部分反转后的链表的头
 
     return res;
+}
+
+// 笔试使用不用理会多增加的extra space，只要第一时间把代码写出来即可，
+// 但是面试不行，你得extra space得是O(1)，因为他在面试中要考察你的coding能力
+// 没有改变头，所以不需要返回head
+void partitionList(LinkList &myList, int pivot)
+{
+
+    Node *cur = myList.getHead();
+
+    std::vector<int> vec;
+
+    while (cur != nullptr)
+    {
+        vec.push_back(cur->data);
+        cur = cur->next;
+    }
+
+    // partition
+    int less = 0 - 1;
+    int more = vec.size();
+    int i = 0;
+    while (i != more)
+    {
+        if (vec[i] < pivot)
+        {
+            std::swap(vec[i], vec[++less]);
+            i++;
+        }
+        else if (vec[i] > pivot)
+        {
+            std::swap(vec[i], vec[--more]);
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    // 重新把vec赋值给链表
+    cur = myList.getHead();
+    i = 0;
+    while (cur != nullptr)
+    {
+        cur->data = vec[i++];
+        cur = cur->next;
+    }
+}
+
+// 空间复杂度从O(N)，变为O(1)，面试时要这样写，这样才是考察你的coding能力
+// 代价是，原本的myList已经被改的乱七八糟了，为了省空间，只能从原来的链表中作动作
+void partitionListII(LinkList &myList, int pivot)
+{
+    Node *sh = nullptr; // short head
+    Node *st = nullptr; // short tail
+    Node *eh = nullptr; // equal head
+    Node *et = nullptr; // equal tail
+    Node *bh = nullptr; // big head
+    Node *bt = nullptr; // big tail
+
+    Node *cur = myList.getHead();
+
+    while (cur != nullptr) // 把所有的节点按要求放到大中小3个链表上
+    {
+        if (cur->data < pivot)
+        {
+            if (sh == nullptr && st == nullptr)
+            {
+                sh = cur;
+                st = cur;
+            }
+            else
+            {
+                st->next = cur;
+                st = cur;
+            }
+        }
+        else if (cur->data > pivot)
+        {
+            if (bh == nullptr && bt == nullptr)
+            {
+                bh = cur;
+                bt = cur;
+            }
+            else
+            {
+
+                bt->next = cur;
+                bt = cur;
+            }
+        }
+        else
+        {
+            if (eh == nullptr && et == nullptr)
+            {
+                eh = cur;
+                et = cur;
+            }
+            else
+            {
+
+                et->next = cur;
+                et = cur;
+            }
+        }
+
+        cur = cur->next;
+    }
+
+    if (sh != nullptr)
+    {
+        st->next = eh == nullptr ? bh : eh;
+    }
+    if (eh != nullptr)
+    {
+        et->next = bh;
+    }
+    if (bh != nullptr)
+    {
+        bt->next = nullptr;
+    }
+
+    Node *p = sh == nullptr ? (eh == nullptr ? bh : eh) : sh;
+    myList.setHead(p);
+}
+
+Node *copyListWithRandNode(LinkList &myList)
+{
+    std::unordered_map<Node *, Node *> map;
+    Node *cur = myList.getHead();
+
+    while (cur != nullptr) // hashmap哈希表将所有的节点都存起来，key是原来的节点，value是同样的data值对应的新节点
+    {
+        Node *p = new Node(cur->data);
+        map[cur] = p;
+        cur = cur->next;
+    }
+
+    // 对新的节点进行链接link
+    cur = myList.getHead();
+    while (cur != nullptr)
+    {
+        auto iterator = map.find(cur);
+        auto iteratorNext = map.find(cur->next);
+
+        if (iteratorNext == map.end()) // 说明iteratorNext为空
+        {
+            iterator->second->next = nullptr;
+            break;
+        }
+
+        iterator->second->next = iteratorNext->second;
+
+        cur = cur->next;
+    }
+    cur = myList.getHead();
+    return map.find(cur)->second;
+}
+
+// 入环节点，有则返回入环节点，无则返回空
+Node *getLoopPoint(LinkList &myList)
+{
+    Node *slow = myList.getHead();
+    Node *fast = myList.getHead();
+
+    if (slow == nullptr || slow->next == nullptr || slow->next->next == nullptr)
+    {
+        return nullptr;
+    }
+
+    do
+    {
+        if (fast->next == nullptr || fast->next->next == nullptr) // 奇数偶数两种情况都考虑进来
+        {
+            return nullptr; // 单向无环则退出
+        }
+
+        slow = slow->next;
+        fast = fast->next->next;
+    } while (slow != fast); // 快慢指针第一次相遇（内存地址），退出循环，slow保持当前的位置
+
+    fast = myList.getHead(); // 快指针从头开始，变成慢指针，与前面的slow指针一起walk，直到再次相遇，则是入环节点
+    do
+    {
+        slow = slow->next;
+        fast = fast->next;
+    } while (slow != fast); // 两个慢指针再次相遇（内存地址），退出循环，相遇点（内存地址相等），则是入环地址
+
+    return slow;
+}
+
+// 两个链表长度和为N，要求时间复杂度O(N)，extra space O(1)，
+// 也就是不允许使用哈希表（extra space = O(N)）
+Node *intersectListsNoLoop(LinkList &myList1, LinkList &myList2)
+{
+    // myList1.loopifyList(2);
+    // myList2.loopifyList(1);
+
+    // Node *loop1 = getLoopPoint(myList1);
+    // Node *loop2 = getLoopPoint(myList2);
+
+    // 两个链表都没有成环，只有一种情况可以相交，即成一个Y字型
+    // if (loop1 == nullptr && loop2 == nullptr)
+
+    Node *cur1 = myList1.getHead();
+    Node *cur2 = myList2.getHead();
+    int len = 0;
+
+    while (cur1->next != nullptr) // 是最后一个节点，停止
+    {
+        len++;
+        cur1 = cur1->next;
+    }
+
+    while (cur2->next != nullptr)
+    {
+        len--;
+        cur2 = cur2->next;
+    }
+
+    if (cur1 != cur2) // 没有成环，而且最后的节点不相等，说明是两个链表没有相交，直接返回空
+    {
+        return nullptr;
+    }
+
+    // 说明是两个链表组成了Y字型，有共同的Y字型的下半部分，最后一个节点的内存地址相等
+    // cur1赋值长链表的头，cur2赋值短链表的头
+    cur1 = len > 0 ? myList1.getHead() : myList2.getHead();
+    cur2 = cur1 == myList1.getHead() ? myList2.getHead() : myList1.getHead();
+    len = std::abs(len);
+
+    while (len--)
+    {
+        cur1 = cur1->next;
+    }
+
+    while (cur1 != cur2)
+    {
+        cur1 = cur1->next;
+        cur2 = cur2->next;
+    }
+
+    return cur1;
+}
+
+Node *intersectListsBothLoop(LinkList &myList1, Node *loop1, LinkList &myList2, Node *loop2)
+{
+    // 类似两个都无环的情况
+    if (loop1 == loop2) // 相等时，只有一个情况，Y字型下面挂着一个气球
+    {
+        Node *cur1 = myList1.getHead();
+        Node *cur2 = myList2.getHead();
+        int len = 0;
+        while (cur1 != loop1)
+        {
+            len++;
+            cur1 = cur1->next;
+        }
+        while (cur2 != loop2)
+        {
+            len--;
+            cur2 = cur2->next;
+        }
+
+        cur1 = len > 0 ? myList1.getHead() : myList2.getHead();
+        cur2 = cur1 == myList1.getHead() ? myList2.getHead() : myList1.getHead();
+        len = std::abs(len);
+
+        while (len--)
+        {
+            cur1 = cur1->next;
+        }
+
+        while (cur1 != cur2)
+        {
+            cur1 = cur1->next;
+            cur2 = cur2->next;
+        }
+
+        return cur1;
+    }
+    else
+    {
+        Node *cur1 = loop1->next;
+        while (cur1 != loop1)
+        {
+            if (cur1 == loop2) // 带耳朵的猫头形状
+            {
+                return loop1;
+            }
+
+            cur1 = cur1->next; // 转一圈，如果没有遇到loop2，则说明是两个独立的6形状
+        }
+        return nullptr; // 样子像两个6，各自独立，没有相交intersect
+    }
+}
+
+Node *intersectLists(LinkList &myList1, LinkList &myList2)
+{
+    Node *loop1 = getLoopPoint(myList1);
+    Node *loop2 = getLoopPoint(myList2);
+
+    // 两个都不环，可能有相交
+    if (loop1 == nullptr && loop2 == nullptr)
+    {
+        return intersectListsNoLoop(myList1, myList2);
+    }
+    // 两个都环，可能有相交
+    if (loop1 != nullptr && loop2 != nullptr)
+    {
+        return intersectListsBothLoop(myList1, loop1, myList2, loop2);
+    }
+    // 一个不环，一个环，不可能有相交的情况
+    return nullptr;
+}
+
+// 所有节点的父节点，都记录下来
+void fatherMap(TNode *&node, std::unordered_map<TNode *, TNode *> &map) // 这个map入参必须是引用，否则对外面的map无效！！！
+{
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    if (node->left != nullptr)
+    {
+        map[node->left] = node;
+    }
+
+    if (node->right != nullptr)
+    {
+        map[node->right] = node;
+    }
+
+    fatherMap(node->left, map);
+    fatherMap(node->right, map);
+}
+
+TNode *lowestCommonAncestor(TNode *root, TNode *node1, TNode *node2)
+{
+    if (node1 == nullptr || node2 == nullptr)
+    {
+        return node1 != nullptr ? node1 : node2;
+    }
+
+    std::unordered_map<TNode *, TNode *> map; // fatherMap这里有个最大的坑，必须得传引用，不然从fatherMap函数出来后map是空的！！！
+    fatherMap(root, map);                     // 除了根节点10，所有节点的父节点都对应好了，还有个空节点，父节点为150这个节点（最后一个节点）
+    map[root] = root;                         // 根节点对应的还是根节点
+
+    std::unordered_set<TNode *> set; // 把所有node1的祖辈节点都放在一个集合里面
+
+    while (true)
+    {
+        set.insert(node1); // 把自己跟一条链上的祖辈都放到一个set中
+        if (node1 == root) // 如果是根节点了，就退出
+        {
+            break;
+        }
+        node1 = map.find(node1)->second; // 让节点等于自己的父亲
+    }
+
+    while (true)
+    {
+        auto iterator = set.find(node2); // 在包含了node1和node1祖辈的set中，从node2自己开始找起,一次一次的找
+
+        if (iterator != set.end()) // 找到了，则返回
+        {
+            return *iterator;
+        }
+
+        if (node2 == root) // 到了根节点了，还是没找到，返回空
+        {
+            return nullptr;
+        }
+
+        node2 = map.find(node2)->second; // 让节点等于自己的父亲
+    }
+
+    return nullptr;
+}
+
+TNode *lowestCommonAncestorII(TNode *root, TNode *node1, TNode *node2)
+{
+    if (root == nullptr || node1 == root || node2 == root)
+    {
+        return root;
+    }
+
+    TNode *leftNode = lowestCommonAncestorII(root->left, node1, node2);
+    TNode *rightNode = lowestCommonAncestorII(root->right, node1, node2);
+
+    if (leftNode != nullptr && rightNode != nullptr)
+    {
+        return root;
+    }
+
+    return leftNode != nullptr ? leftNode : rightNode;
 }

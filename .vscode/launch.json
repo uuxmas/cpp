@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/bin/test",
             "args": [],
-            "stopAtEntry": true, //true 调试时，直接停在第一行代码
+            "stopAtEntry": false, //true 调试时，直接停在第一行代码
             "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": false,
