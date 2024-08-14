@@ -17,8 +17,8 @@ void testUtils()
 void testSort()
 {
 
-    const int EPOCH = 10;   // 权重其次大，取代宏定义会好一些
-    const int MAXSIZE = 10; // 权重最大
+    const int EPOCH = 100;   // 权重其次大，取代宏定义会好一些
+    const int MAXSIZE = 100; // 权重最大
     const int MAXVALUE = 100;
 
     int testTime = EPOCH;
@@ -204,6 +204,27 @@ void testLeetcode()
 
     // TNode *p = lowestCommonAncestor();
     // std::cout << "common ancestor node: " << p << " " << p->data << "\n";
+
+    paperFold(3);
+
+    std::cout << "\n";
+    std::cout << "\n";
+
+    meetingsArrage();
+
+    stringSort();
+
+    int a = lessMoneySplit();
+    std::cout << "less money split(haffoman code problem): " << a << "\n";
+
+    a = maxCapitalised();
+    std::cout << "max capital: " << a << "\n";
+
+    findMediumNumber();
+    const int N = 8; // N=16, NQueenBits == 14.6629s
+    // NQueen(N);
+    NQueenII(N);
+    std::cout << "\n";
 }
 
 void testCPP_constExpression()
@@ -436,19 +457,243 @@ void testCPP_class()
 
     std::cout << "find address of node data = 0 :" << myTree.findTreeNode(0) << "\n";
 
-    TNode *node1 = myTree.findTreeNode(300);
-    TNode *node2 = myTree.findTreeNode(160);
-    
+    TNode *node1 = myTree.findTreeNode(190);
+    TNode *node2 = myTree.findTreeNode(40);
+
     // 没有换行符的话，控制台是不会输出打印内容的，直到遇到\n换行符！！！！！
     std::cout << "find address of 3 nodes: " << "\n";
 
     TNode *res1 = lowestCommonAncestor(myTree.getRoot(), node1, node2);
     std::cout << res1 << "  " << "  " << node1 << "  " << node2 << "\n";
 
-    TNode *res2 = lowestCommonAncestorII(myTree.getRoot(), node1, node2);   
+    TNode *res2 = lowestCommonAncestorII(myTree.getRoot(), node1, node2);
     std::cout << res2 << "  " << "  " << node1 << "  " << node2 << "\n";
 
+    // 带有父节点的树
+    Tree2 myTree2;
+
+    for (int i = 1; i <= 31; i++)
+    {
+        myTree2.addData(i * 10);
+    }
+
+    myTree2.printTree();
+
+    TNode2 *node3 = myTree2.getSuccessor(myTree2.findTreeNode2(170));
+
+    std::cout << "get successor node, address: " << node3 << " value: " << (node3 == nullptr ? 0 : node3->data) << "\n";
+
+    std::string strTree = myTree2.serialTree2();
+
+    std::cout << "serial tree nodes: \n"
+              << strTree << "\n";
+
+    Tree2 myTree3(strTree);
+
+    myTree3.printTree();
+
+    const int ROWS = 5;
+    int matrix[ROWS][3] = {
+        // {2, 1, 3},
+        // {2, 7, 6},
+        // {1, 5, 9},
+        // {7, 5, 12},
+        // {5, 3, 100},//顶点不会重复存储在图中，但是线会有重复的顶点组成的新线
+        // {7,8,300},
+        {1, 2, 5},
+        {2, 3, 5},
+        {3, 4, 5},
+        {2, 4, 5},
+        {1, 3, 5},
+
+    };
+
+    DirectedGraph myGraph;
+    myGraph.addVertexEdge(matrix, ROWS);
+
+    myGraph.breadthFirstSearch(myGraph.findVertex(2));
+    myGraph.depthFirstSearch(myGraph.findVertex(2));
+    myGraph.topologySort();
+
+    UndirectedGraph<int> myUnGraph(10);
+    // myUnGraph.addEdge(0, 1, 10);
+    // myUnGraph.addEdge(0, 4, 20);
+    // myUnGraph.addEdge(1, 2, 30);
+    // myUnGraph.addEdge(1, 3, 40);
+    // myUnGraph.addEdge(1, 4, 50);
+    // myUnGraph.addEdge(2, 3, 60);
+    // myUnGraph.addEdge(3, 4, 70);
+
+    // myUnGraph.addEdge(1, 2, 3);
+    // myUnGraph.addEdge(2, 3, 5);
+    // myUnGraph.addEdge(3, 4, 2);
+    // myUnGraph.addEdge(4, 5, 7);
+    // myUnGraph.addEdge(5, 1, 1);
+    // myUnGraph.addEdge(2, 5, 4);
+    // myUnGraph.addEdge(3, 5, 6);
+
+    myUnGraph.addEdge(1, 2, 3);
+    myUnGraph.addEdge(1, 6, 9);
+    myUnGraph.addEdge(1, 3, 6);
+    myUnGraph.addEdge(2, 1, 3);
+    myUnGraph.addEdge(2, 3, 4);
+    myUnGraph.addEdge(2, 4, 2);
+    myUnGraph.addEdge(2, 5, 9);
+    myUnGraph.addEdge(2, 6, 9);
+    myUnGraph.addEdge(3, 7, 9);
+    myUnGraph.addEdge(3, 4, 2);
+    myUnGraph.addEdge(3, 2, 4);
+    myUnGraph.addEdge(3, 1, 6);
+    myUnGraph.addEdge(4, 3, 2);
+    myUnGraph.addEdge(4, 7, 9);
+    myUnGraph.addEdge(4, 5, 8);
+    myUnGraph.addEdge(4, 2, 2);
+    myUnGraph.addEdge(5, 6, 8);
+    myUnGraph.addEdge(5, 2, 9);
+    myUnGraph.addEdge(5, 4, 8);
+    myUnGraph.addEdge(5, 7, 7);
+    myUnGraph.addEdge(5, 9, 9);
+    myUnGraph.addEdge(5, 10, 10);
+    myUnGraph.addEdge(6, 1, 9);
+    myUnGraph.addEdge(6, 2, 9);
+    myUnGraph.addEdge(6, 5, 8);
+    myUnGraph.addEdge(6, 10, 18);
+    myUnGraph.addEdge(7, 3, 9);
+    myUnGraph.addEdge(7, 4, 9);
+    myUnGraph.addEdge(7, 5, 7);
+    myUnGraph.addEdge(7, 9, 5);
+    myUnGraph.addEdge(7, 8, 4);
+    myUnGraph.addEdge(8, 7, 4);
+    myUnGraph.addEdge(8, 9, 1);
+    myUnGraph.addEdge(8, 10, 4);
+    myUnGraph.addEdge(9, 8, 1);
+    myUnGraph.addEdge(9, 7, 5);
+    myUnGraph.addEdge(9, 5, 9);
+    myUnGraph.addEdge(9, 10, 3);
+    myUnGraph.addEdge(10, 8, 4);
+    myUnGraph.addEdge(10, 9, 3);
+    myUnGraph.addEdge(10, 5, 10);
+    myUnGraph.addEdge(10, 6, 18);
+
+    myUnGraph.BFSTraversal(4);
+
     std::cout << "\n";
+    myUnGraph.printGraphBST(4);
+    std::cout << "\n";
+    myUnGraph.printDotFormatBST(8);
+    std::cout << "\n";
+
+    myUnGraph.DFSTraversal(8);
+    std::cout << "\n";
+
+    myUnGraph.Kruskal();
+    std::cout << "\n";
+
+    // C++中模板类和模板成员函数不能分开写，否则编译时无法找到对应文件，应该声明和定义全写在头文件h中，就像STL也是如此
+    // 踩过好几次坑了，这问题
+    UndirectedGraph<char> myGraph2(3);
+    myGraph2.addEdge('A', 'B', 1);
+    myGraph2.addEdge('A', 'C', 1);
+    myGraph2.addEdge('B', 'C', 3);
+    myGraph2.addEdge('A', 'D', 2);
+    myGraph2.printDotFormatBST('A');
+    myGraph2.Kruskal();
+    myGraph2.Prim('A');
+
+    // https://www.cnblogs.com/biyeymyhjob/archive/2012/07/30/2615542.html
+    UndirectedGraph<char> myGraph3(7);
+    myGraph3.addEdge('A', 'B', 7);
+    myGraph3.addEdge('A', 'D', 5);
+    myGraph3.addEdge('B', 'A', 7);
+    myGraph3.addEdge('B', 'D', 9);
+    myGraph3.addEdge('B', 'C', 8);
+    myGraph3.addEdge('B', 'E', 7);
+    myGraph3.addEdge('C', 'B', 8);
+    myGraph3.addEdge('C', 'E', 5);
+    myGraph3.addEdge('D', 'A', 5);
+    myGraph3.addEdge('D', 'B', 9);
+    myGraph3.addEdge('D', 'E', 15);
+    myGraph3.addEdge('D', 'F', 6);
+    myGraph3.addEdge('E', 'C', 5);
+    myGraph3.addEdge('E', 'B', 7);
+    myGraph3.addEdge('E', 'D', 15);
+    myGraph3.addEdge('E', 'F', 8);
+    myGraph3.addEdge('E', 'G', 9);
+    myGraph3.addEdge('F', 'D', 6);
+    myGraph3.addEdge('F', 'E', 8);
+    myGraph3.addEdge('F', 'G', 11);
+    myGraph3.addEdge('G', 'F', 11);
+    myGraph3.addEdge('G', 'E', 9);
+
+    myGraph3.Kruskal();
+    myGraph3.Prim('A');
+    myGraph3.printDotFormatBST('A');
+
+    myGraph3.Dijkstra('A');
+
+    UndirectedGraph<int> myGraph4(8);
+    // myGraph4.addEdge(1,2,4);
+    // myGraph4.addEdge(1,6,6);
+    // myGraph4.addEdge(4,6,5);
+    // myGraph4.addEdge(6,7,6);
+    // myGraph4.addEdge(5,7,5);
+    // myGraph4.addEdge(3,7,9);
+    myGraph4.addEdge(0, 2, 7);
+    myGraph4.addEdge(0, 3, 6);
+    myGraph4.addEdge(0, 4, 2);
+    myGraph4.addEdge(1, 3, 8);
+    myGraph4.addEdge(1, 6, 9);
+    myGraph4.addEdge(2, 0, 7);
+    myGraph4.addEdge(2, 6, 9);
+    myGraph4.addEdge(3, 0, 6);
+    myGraph4.addEdge(3, 1, 8);
+    myGraph4.addEdge(3, 5, 1);
+    myGraph4.addEdge(4, 0, 2);
+    myGraph4.addEdge(4, 6, 9);
+    myGraph4.addEdge(4, 7, 7);
+    myGraph4.addEdge(5, 3, 1);
+    myGraph4.addEdge(5, 6, 5);
+    myGraph4.addEdge(6, 4, 9);
+    myGraph4.addEdge(6, 2, 9);
+    myGraph4.addEdge(6, 1, 9);
+    myGraph4.addEdge(6, 5, 5);
+    myGraph4.addEdge(6, 7, 3);
+    myGraph4.addEdge(7, 6, 3);
+    myGraph4.addEdge(7, 4, 7);
+    myGraph4.printDotFormatBST(0);
+    myGraph4.Dijkstra(0);
+
+    std::cout << "\n";
+
+    Trie trieTree;
+    // bool res;
+    trieTree.insert("apple"); //
+
+    // res = trieTree.search("apple"); // true
+    // std::cout << "res" << res << "\n";
+
+    // res = trieTree.search("app"); // false
+    // std::cout << "res" << res << "\n";
+
+    // res = trieTree.prefix("app"); // true
+    // std::cout << "res" << res << "\n";
+
+    trieTree.insert("app"); //
+
+    // res = trieTree.search("app"); // true
+    // std::cout << "res" << res << "\n";
+
+    trieTree.deleteWord("apple");
+    // trieTree.deleteWord("app");
+
+    // trieTree.insert("lead");
+    // res = trieTree.search("lead"); // true
+
+    // res = trieTree.search("apple"); // false or true
+    // std::cout << "res" << res << "\n";
+
+    // trieTree.deleteWord("lead");
+
     std::cout << "\n";
 }
 
@@ -458,6 +703,8 @@ int main()
     testSort();
     testLeetcode();
     testCPP_class();
+
+
 
     // system("pause");linux没有pause命令
     return 0;

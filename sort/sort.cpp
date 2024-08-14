@@ -15,12 +15,21 @@ void bubbleSort(std::vector<int> &vec)
 
     for (int i = 0; i < n - 1; i++)
     {
+        // 定义一个布尔变量 hasChange，用来标记每轮是否进行了交换。在每轮遍历开始时，将 hasChange 设置为 false。
+        // 若当轮没有发生交换，说明此时数组已经按照升序排列，hasChange 依然是为 false。此时外层循环直接退出，排序结束。
+        bool change = false;
+
         for (int j = 0; j < n - 1 - i; j++)
         {
             if (vec[j] > vec[j + 1])
             {
                 std::swap(vec[j], vec[j + 1]);
+                change = true;
             }
+        }
+        if (!change)
+        {
+            break;
         }
     }
 }
@@ -35,7 +44,7 @@ void selectSort(std::vector<int> &vec)
         return;
     }
 
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < n; i++)
     {
         int minIndex = i;
         for (int j = i + 1; j < n; j++)
@@ -171,7 +180,7 @@ std::vector<int> quickSort_partition(std::vector<int> &vec, int l, int r)
 
     while (cur < more)
     {
-        if (vec[cur] < vec[r]) // vec[r]作为参考数对vector进行调整
+        if (vec[cur] < vec[r]) // vec[r]作为参考数pivot对vector进行调整
         {
             std::swap(vec[cur], vec[++less]);
             cur++;
@@ -186,8 +195,8 @@ std::vector<int> quickSort_partition(std::vector<int> &vec, int l, int r)
         }
     }
 
-    // 最后处理参考数，将其放在合适的位置（more的第一个元素），
-    // 此轮调整结束时，参考数的整体位置确定了: 小于参考数的所有数都在参考数的左边，大于参考数的所有数都在参考数的右边
+    // 最后处理参考数pivot，将其放在合适的位置（more的第一个元素），
+    // 此轮调整结束时，参考数pivot的整体位置确定了: 小于参考数的所有数都在参考数的左边，大于参考数的所有数都在参考数的右边
     std::swap(vec[more], vec[r]);
 
     std::vector<int> boundryVec{less, more + 1}; // 返回此次调整完毕后的less和more的边界，以便进行下一轮的partition
@@ -197,15 +206,17 @@ std::vector<int> quickSort_partition(std::vector<int> &vec, int l, int r)
 
 void quickSort_process(std::vector<int> &vec, int l, int r)
 {
-    if (l < r)
+    if (l >= r)
     {
-        int randNum = randomInt() % (r - l + 1); // 随机快排，体现在这两句话
-        std::swap(vec[l + randNum], vec[r]);     // 随机快排，体现在这两句话
-
-        std::vector<int> v = quickSort_partition(vec, l, r); // 经典快排从这里开始,中间的值已经排好,所以继续递归左边的整体和右边的整体
-        quickSort_process(vec, l, v[0]);
-        quickSort_process(vec, v[1], r);
+        return;
     }
+
+    int randNum = randomInt() % (r - l + 1); // 随机快排，体现在这两句话
+    std::swap(vec[l + randNum], vec[r]);     // 随机快排，体现在这两句话
+
+    std::vector<int> v = quickSort_partition(vec, l, r); // 经典快排从这里开始,中间的值已经排好,所以继续递归左边的整体和右边的整体
+    quickSort_process(vec, l, v[0]);
+    quickSort_process(vec, v[1], r);
 }
 
 void quickSort(std::vector<int> &vec)
@@ -218,7 +229,7 @@ void quickSort(std::vector<int> &vec)
     quickSort_process(vec, 0, n - 1);
 }
 
-// vector中的最大数包含有几位数，如最大数是1324，包含有四位数，如果最大数是29，包含有二位数
+// vector中的最大数包含有几位数，如最大数是1324，包含有四位数，如果最大数字是29，包含有二位数
 int maxBit(std::vector<int> &vec)
 {
     int max = maxRecursive(vec, 0, vec.size() - 1);
@@ -231,7 +242,7 @@ int maxBit(std::vector<int> &vec)
     return bit;
 }
 
-// 获得一个整数的个位，十位，百位，千位等每位上的数字，0表示个位，1表示十位，2表示百位，3表示千位
+// 获得一个整数的个位，十位，百位，千位等每位上的数字，bit = 0表示个位，1表示十位，2表示百位，3表示千位
 int getDigit(int num, int bit)
 {
     return num / powerRaise(10, bit) % 10;
@@ -277,7 +288,8 @@ void radixSort(std::vector<int> &vec)
     p = nullptr;
 }
 
-// 手写一个堆，并对其进行堆排序，系统虽然有现成的堆结构（如优先级队列），但是个黑盒，只有push（添加元素时就是堆化的过程），pop（堆化后的弹出都是最大或者最小值）的操作，
+// 手写一个堆，并对其进行堆排序，系统虽然有现成的堆结构（如优先级队列），但是个黑盒，只有push（添加元素时就是堆化的过程）以及
+// pop（堆化后的弹出都是最大或者最小值）的操作，
 // 如果需要操作堆里面的某个节点，对其进行相关操作，就不方便了，所以得自己写堆
 // 面试时经常让手写堆，系统提供的现成的堆结构，如优先级队列，priority_queue，在C++中的实现是大根堆，java中默认是小根堆
 
@@ -333,7 +345,7 @@ void bigRootHeapDown(std::vector<int> &vec, int index)
     {
         int largeChild = (r <= heapSize && vec[r] > vec[l]) ? r : l; // 有右孩，且右孩大，给右孩的指针，
                                                                      // 否则没有右孩或者有右孩但小于左孩，则给左孩的指针
-        if (vec[largeChild] > vec[p])                                // 最大孩跟父比，大，则跟父换
+        if (vec[largeChild] > vec[p])                                // 最大孩跟父比，比父还大，则跟父换
         {
             std::swap(vec[largeChild], vec[p]);
             p = largeChild; // 继续以孩的视角，继续下行堆化
@@ -365,7 +377,7 @@ void smallRootHeapDown(std::vector<int> &vec, int index)
     {
         int smallChild = (r <= heapSize && vec[r] < vec[l]) ? r : l; // 有右孩，且右孩小，给右孩的指针，
                                                                      // 否则没有右孩或者有右孩但小于左孩，则给左孩的指针
-        if (vec[smallChild] < vec[p])                                // 最大孩跟父比，大，则跟父换
+        if (vec[smallChild] < vec[p])                                // 最小孩跟父比，比父还小，则跟父换
         {
             std::swap(vec[smallChild], vec[p]);
             p = smallChild; // 继续以孩的视角，继续下行堆化

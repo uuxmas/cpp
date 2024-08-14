@@ -305,8 +305,8 @@ void orderedTwoListsSameElements()
     std::vector<int> vec1;
     std::vector<int> vec2;
 
-    const int MS = 10;
-    const int MV = 10;
+    const int MS = 10; // max size
+    const int MV = 10; // max value
 
     randomVector(MS, MV, vec1);
     randomVector(MS, MV, vec2);
@@ -822,11 +822,13 @@ TNode *lowestCommonAncestor(TNode *root, TNode *node1, TNode *node2)
     return nullptr;
 }
 
+// 需要自己打印出树图后，举例，两种情况，一个节点本身就是最低公共祖先，
+// 一个是两个节点分别汇聚在一个相同的节点。分别跟踪，比较好理解
 TNode *lowestCommonAncestorII(TNode *root, TNode *node1, TNode *node2)
 {
-    if (root == nullptr || node1 == root || node2 == root)
+    if (root == nullptr || root == node1 || root == node2)
     {
-        return root;
+        return root; // 返回就三种情况，两个节点或者空
     }
 
     TNode *leftNode = lowestCommonAncestorII(root->left, node1, node2);
@@ -834,8 +836,374 @@ TNode *lowestCommonAncestorII(TNode *root, TNode *node1, TNode *node2)
 
     if (leftNode != nullptr && rightNode != nullptr)
     {
-        return root;
+        return root; // 两个都不为空，只能是两个节点都找到了，那就返回他们共同的父节点就是结果
     }
 
     return leftNode != nullptr ? leftNode : rightNode;
+}
+
+// 折纸打印凹痕和凸痕，纸条折叠一次，中间凹，再对折一次，左凹，中间凹，右凸
+// 所以，根是凹，孩子是左凹右凸，新折痕的两侧分别是左凹右凸
+// 题目：将对折了N次后的凹凸痕迹图打印出来（从纸条的最左边开始打印）
+// 把这些痕迹画成一颗二叉树，纸条从上到向的痕迹类型，正好是中序递归遍历，N是二叉树的深度，空间复杂度O(N)
+// 否则申请一个 2^N-1 的空间，遍历一个个打印，空间复杂度就是O(2^N)，太大了
+void paperFold(int N)
+{
+    printFold(1, N, false); // 假设false为0凹，true为1凸，第一次折叠，痕迹为0凹
+}
+
+void printFold(int i, int N, bool appear)
+{
+    if (i > N)
+    {
+        return;
+    }
+
+    printFold(i + 1, N, false); // 左0凹
+
+    // 中间处理打印（中序遍历）
+    std::cout << appear << " ";
+    // 中间处理打印（中序遍历）
+
+    printFold(i + 1, N, true); // 右1凸
+}
+
+bool CompareMeetings::operator()(const std::pair<int, int> &v1, const std::pair<int, int> &v2) const
+{
+    return v1.second < v2.second;
+}
+
+void endEarlyArrange(int timePoint, std::vector<std::pair<int, int>> &meetingVec)
+{
+    // 按照谁先结束进行排列
+    std::sort(meetingVec.begin(), meetingVec.end(), CompareMeetings());
+
+    int res = 0;
+    // 遍历所有的会议
+    for (const auto &i : meetingVec)
+    {
+        if (timePoint <= i.first)
+        {
+            res++;                // 会议的场次计数
+            timePoint = i.second; // 更新时间点
+            std::cout << i.first << "----" << i.second << "\n";
+        }
+    }
+    std::cout << "total " << res << " meetings\n";
+}
+
+/**
+ * 1---6,8------
+ * 2---6,12-----
+ * 3---7,16-----
+ * 4---14,18-----
+ * 5---10,20-----
+ * 6---19,30----
+ */
+void meetingsArrage()
+{
+    std::vector<std::pair<int, int>> timeTable;
+    int timePoint = 6;
+    timeTable.push_back({19, 30});
+    timeTable.push_back({10, 20});
+    timeTable.push_back({6, 12});
+    timeTable.push_back({14, 18});
+    timeTable.push_back({6, 8});
+    timeTable.push_back({7, 16});
+    endEarlyArrange(timePoint, timeTable);
+}
+
+// 贪心策略！！！！！得需要证明是有效的贪心策略，但是笔试时，没有时间去证明，需要平时提炼对数器，进行对比，得出该贪心算法是正确的结论，包括ACM竞赛，同样如此
+// 最小字典序，只有a.b<b.a，此时的a放前面，b放后面才是正确的最小字典序的排列方式，如果直接比较a<b，就让a放在前面b放在后面，这样的序列不一定是最小字典序
+// 该排序策略具有传递性，就是需要证明a.b<<b.a, b.c<<c.b --> a.c<<c.a,点代表两个字符串拼接在一起的意思
+// "abc"+"de" == "adc"*k^2 + "de"， k进制的平方表示左移两位，如k=26，表示英文字母，这样拼接运算变成了数学运算
+bool CompareStrings::operator()(const std::string &str1, const std::string &str2) const
+{
+    return (str1 + str2).compare(str2 + str1) < 0; // compare会返回负数，0或者正数，而CompareStrings要求返回bool，所以需要加上 后面的<0才可以
+}
+
+void lowString(std::vector<std::string> &stringVec)
+{
+    std::sort(stringVec.begin(), stringVec.end(), CompareStrings());
+}
+
+void stringSort()
+{
+    std::vector<std::string> stringVec1;
+    std::vector<std::string> stringVec2;
+
+    stringVec1 = {"jibw", "ji", "jp", "bw", "jibw"};
+    // stringVec1 = {"b", "d", "a", "c"};
+    stringVec2 = {"ba", "b"};
+    // stringVec2 = {"bba", "bab"};
+
+    lowString(stringVec1);
+    lowString(stringVec2);
+
+    std::string str1 = "";
+    std::string str2 = "";
+
+    for (const auto &i : stringVec1)
+    {
+        str1 += i;
+    }
+
+    for (const auto &i : stringVec2)
+    {
+        str2 += i;
+    }
+
+    std::cout << str1 << "\n";
+    std::cout << str2 << "\n";
+}
+
+// 分割黄金的最小成本问题，即霍夫曼编码
+int lessMoneySplit()
+{
+    std::priority_queue<int, std::vector<int>, std::greater<int>> haffoman; // 使用小根堆，greater是小根堆，less才是大根堆
+    int res = 0;
+
+    haffoman.push(30);
+    haffoman.push(20);
+    haffoman.push(10);
+
+    while (haffoman.size() > 1)
+    {
+        int a = haffoman.top(); // 每次弹出两个最小的值，求和，再将此和加入小根堆
+        haffoman.pop();
+
+        int b = haffoman.top();
+        haffoman.pop();
+
+        int c = a + b;
+        res += c;
+
+        haffoman.push(c);
+    }
+
+    return res;
+}
+
+bool CompareCapital::operator()(const std::pair<int, int> &p1, const std::pair<int, int> &p2) const
+{
+    return p1.first > p2.first; // min_heap 小根堆,比较第一个参数（投资成本）
+}
+
+bool CompareProfit::operator()(const std::pair<int, int> &p1, const std::pair<int, int> &p2) const
+{
+    return p1.second < p2.second; // max_heap 大根堆，比较第二个参数（利润）
+}
+
+/**
+ * 可以投资的轮数给定，启动资金给定，项目有很多个，每个都包括成本和收益，最终可获得的最大收入是多少
+ * 贪心策略，暴力法找到所有的投资可能，然后对比自己的贪心策略是否正确饿
+ */
+int maxCapitalised()
+{
+    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, CompareCapital> projectQueue;
+    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, CompareProfit> profitQueue;
+    int k = 4; // 可以投资的轮数
+    int w = 1; // 启动资金
+
+    // 项目按照投资成本从小到大，放在小根堆中
+    projectQueue.push({1, 1});
+    projectQueue.push({4, 10});
+    projectQueue.push({2, 3});
+    projectQueue.push({1, 2});
+    projectQueue.push({3, 2});
+    projectQueue.push({2, 7});
+
+    // 有几轮的投资机会
+    for (int i = 0; i < k; i++)
+    {
+        // 把能投资的所有项目都放在从大到小的利润大根堆中
+        while (!projectQueue.empty() && projectQueue.top().first <= w)
+        {
+            profitQueue.push(projectQueue.top());
+            projectQueue.pop();
+        }
+
+        // 此次能投的项目中，找出利润最大的投资
+        if (!profitQueue.empty())
+        {
+            w += profitQueue.top().second; // 利润加到投资资金中，此次投资完成
+            profitQueue.pop();             // 将已投资的项目删除
+        }
+    }
+
+    return w; // 返回最大的收入是多少
+};
+
+double findMediumNumber()
+{
+    std::priority_queue<int, std::vector<int>, std::less<int>> maxHeap;
+    std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+
+    std::queue<int> arrayNum;
+    arrayNum.push(0);
+    arrayNum.push(9);
+    arrayNum.push(17);
+    arrayNum.push(7);
+
+    int num = arrayNum.front();
+    arrayNum.pop();
+
+    maxHeap.push(num);
+    while (!arrayNum.empty())
+    {
+        num = arrayNum.front();
+        arrayNum.pop();
+
+        if (num <= maxHeap.top())
+        {
+            maxHeap.push(num);
+        }
+        else
+        {
+            minHeap.push(num);
+        }
+
+        int s1 = maxHeap.size();
+        int s2 = minHeap.size();
+        if (s1 - s2 >= 2)
+        {
+            minHeap.push(maxHeap.top());
+            maxHeap.pop();
+        }
+        else if (s2 - s1 >= 2)
+        {
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }
+    }
+
+    double res;
+    if (maxHeap.size() != minHeap.size())
+    {
+        std::cout << "豆子，你的计算结果是啥？我是计算机，我的结果是：" << (res = (maxHeap.size() > minHeap.size() ? maxHeap.top() : minHeap.top())) << "\n";
+    }
+    else
+    {
+        std::cout << "子，你的计算结果是啥？我是计算机，我的结果是：" << (res = ((maxHeap.top() + minHeap.top()) / 2.0)) << "\n";
+    }
+
+    return res;
+}
+
+// n不要超过32，递归或者非递归非常耗时，
+// n=8,92个摆法，耗时0.001869s
+// n=10,724个摆法，耗时0.020427s
+// n=12,14200个摆法，耗时0.607357s
+// n=13,73712个摆法，耗时3.06196ss
+// n=14,365596个摆法，耗时19.9257s，bits方法：365596，耗时2.36875s
+// n=15,2279184个摆法，耗时
+// n=16,14772512个摆法，耗时好久，bits方法：14772512，耗时14.8916s
+void NQueens(int n)
+{
+    if (n < 1 || n > 32)
+    {
+        return;
+    }
+
+    std::vector<int> record(n, -1); // Initialize record with n elements，all set to -1
+
+    clock_t start = clock();
+
+    int res = process(0, record, n);
+
+    clock_t end = clock();
+
+    double elapsed_time = double(end - start) / CLOCKS_PER_SEC;
+
+    std::cout << n << "-Queens puzzle total: " << res << "\n";
+    std::cout << "Elapsed time: " << elapsed_time << "s\n";
+}
+
+// 当前的行row和列colomn与前面的一一检查
+bool isValid(const std::vector<int> &record, int row, int colomn)
+{
+    for (int i = 0; i < row; i++) // 之前所有的行都检测一下
+    {
+        // 列不能跟之前的重合coincide，以及对角线也不行coincide
+        if (colomn == record[i] || std::abs(row - i) == std::abs(colomn - record[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+int process(int i, std::vector<int> &record, int n)
+{
+    if (i == n)
+    {
+        // 需要再打开，比较耗时
+        // std::cout << "find one solution: < ";
+
+        // for (const auto &i : record)
+        // {
+        //     std::cout << i + 1 << " "; // 原始比较是从0开始，这里输出为了好看，变成从1开始
+        // }
+
+        // std::cout << ">\n";
+
+        return 1; // 如果到这里了，说明找到了一种摆放方法
+    }
+
+    int res = 0;
+
+    for (int j = 0; j < n; j++)
+    {
+        if (isValid(record, i, j))
+        {
+            record[i] = j;
+            res += process(i + 1, record, n);
+        }
+    }
+
+    return res;
+}
+
+void NQueenII(int n)
+{
+    if (n < 1 || n > 32)
+    {
+        return;
+    }
+
+    int limit = n == 32 ? -1 : (1 << n) - 1; // 这个括号一定得加上，不然就先做减法了
+
+    clock_t start = clock();
+
+    int res = NQueenIIProcess(limit, 0, 0, 0);
+
+    clock_t end = clock();
+
+    double elapsed_time = double(end - start) / CLOCKS_PER_SEC;
+
+    std::cout << n << "-Queens puzzle total(bits): " << res << "\n";
+    std::cout << "Elapsed time(bits): " << elapsed_time << "s\n";
+}
+
+int NQueenIIProcess(int limit, int c, int l, int r) // colomn限制，左对角线限制，右对角线限制
+{
+    if (c == limit) // base case
+    {
+        return 1; // 如果到这里了，说明找到了一种摆放方法
+    }
+
+    int pos = limit & (~(c | l | r)); // 本行所有可以放皇后的地方，（1是可以放，0是不可以放）
+    int mostRightOne = 0;             // 某次可以放皇后的位置
+    int res = 0;
+
+    while (pos != 0)
+    {
+        mostRightOne = pos & (~pos + 1); // 每次取出最右边的1，即取出来一个当前可以放皇后的位置
+        pos -= mostRightOne;             // 这次处理完毕，更新pos
+
+        // 三个方向的约束全部加上mostRightOne，表示mostRightOne位置被标记已放置皇后，在后来的操作中将被禁用
+        res += NQueenIIProcess(limit, (c | mostRightOne), (l | mostRightOne) << 1, (r | mostRightOne) >> 1);
+    }
+
+    return res;
 }

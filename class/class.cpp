@@ -946,3 +946,563 @@ TNode *Tree::findTreeNode(int data)
 
     return nullptr;
 }
+
+TNode2 *Tree2::getLeftMost(TNode2 *node)
+{
+    if (node == nullptr)
+    {
+        return node;
+    }
+
+    while (node->l != nullptr)
+    {
+        node = node->l;
+    }
+    return node;
+}
+
+/**
+ * 后继节点定义：中序遍历二叉树，某节点后面紧挨着的节点就是某节点的后继节点
+ * 题目：在带有父节点的二叉树中，给定某节点，返回其后继节点
+ */
+TNode2 *Tree2::getSuccessor(TNode2 *node)
+{
+    if (node == nullptr)
+    {
+        return nullptr;
+    }
+
+    if (node->r != nullptr) // 情况三，右树不空
+    {
+        return getLeftMost(node->r); // 找到右树中最左的孩(y)
+    }
+
+    // 如果到了根节点（根节点的父辈为空）都没有找到左树，说明一直在右侧，后继节点为空，返回空
+    // 从本节点开始，往上找祖辈，某个祖辈是祖辈的父辈的左孩子，返回该祖辈的父辈(y)
+    /** 一           二          三
+     * ()           (y)         (x)
+     *  \          /           /  \
+     *   ()       ()         ()    ()
+     *    \        \               /\
+     *     (x)      (x)          (y) ()
+     */
+
+    while (node->p != nullptr) // 是根节点就从while退出了
+    {
+        if (node == node->p->l) // 情况二
+        {
+            return node->p;
+        }
+
+        node = node->p;
+    }
+
+    return nullptr; // 情况一
+}
+
+void Tree2::addData(int data)
+{
+    TNode2 *node = new TNode2(data);
+
+    if (root == nullptr)
+    {
+        root = node;
+        return;
+    }
+
+    std::queue<TNode2 *> q;
+    q.push(root);
+    while (!q.empty())
+    {
+        TNode2 *cur = q.front();
+        q.pop();
+
+        if (cur->l != nullptr)
+        {
+            q.push(cur->l);
+        }
+        else
+        {
+            cur->l = node;
+            cur->l->p = cur;
+            return;
+        }
+
+        if (cur->r != nullptr)
+        {
+            q.push(cur->r);
+        }
+        else
+        {
+            cur->r = node;
+            cur->r->p = cur;
+            return;
+        }
+    }
+}
+
+std::string Tree2::getSpace(int num)
+{
+    std::string str = "";
+    str.append(num, ' ');
+    return str;
+}
+
+void Tree2::printInorder(TNode2 *node, int height, std::string to, int len)
+{
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    printInorder(node->r, height + 1, "v", len);
+    std::string val = to + std::to_string(node->data) + to;
+    int lenM = val.length();
+    int lenL = (len - lenM) >> 1;
+    int lenR = len - lenM - lenL;
+    std::cout << getSpace(height * len) + getSpace(lenL) + val + getSpace(lenR) << "\n";
+    printInorder(node->l, height + 1, "^", len);
+}
+
+void Tree2::printTree()
+{
+    printInorder(root, 0, "H", 17);
+}
+
+// 二叉树节点的查找（层级遍历level order）
+TNode2 *Tree2::findTreeNode2(int data)
+{
+    if (root == nullptr)
+    {
+        return nullptr;
+    }
+
+    std::queue<TNode2 *> q;
+    q.push(root);
+
+    while (!q.empty())
+    {
+        TNode2 *cur = q.front();
+        q.pop();
+
+        if (cur->data == data)
+        {
+            return cur;
+        }
+
+        if (cur->l != nullptr)
+        {
+            q.push(cur->l);
+        }
+
+        if (cur->r != nullptr)
+        {
+            q.push(cur->r);
+        }
+    }
+
+    return nullptr;
+}
+
+TNode2 *Tree2::getRoot()
+{
+    return this->root;
+}
+
+// 序列化一个二叉树
+std::string Tree2::serialTree2()
+{
+    return serialTree2ByPreOrder(root);
+}
+
+// 序列化一个二叉树，使用前序遍历
+std::string Tree2::serialTree2ByPreOrder(TNode2 *node)
+{
+    if (node == nullptr)
+    {
+        return "#_";
+    }
+
+    std::string str = std::to_string(node->data) + "_";
+
+    std::string leftStr = serialTree2ByPreOrder(node->l);
+    std::string rightStr = serialTree2ByPreOrder(node->r);
+
+    return str + leftStr + rightStr;
+}
+
+// 构造函数，通过反序列化构造一个二叉树，使用前序遍历
+Tree2::Tree2(const std::string &serialStr)
+{
+    std::queue<std::string> tokens;
+    this->root = nullptr;
+    split(serialStr, tokens);
+    this->root = reconSerialTree2ByPreOrder(tokens);
+}
+
+void Tree2::split(const std::string &s, std::queue<std::string> &tokens, const std::string &delimiters) // 又是一个坑，缺省值delimeters在头文件中写明，在定义中不写缺省值
+{
+    std::string::size_type lastPos = s.find_first_not_of(delimiters, 0);
+    std::string::size_type pos = s.find_first_of(delimiters, lastPos);
+
+    while (std::string::npos != pos || std::string::npos != lastPos)
+    {
+        tokens.push(s.substr(lastPos, pos - lastPos));
+        lastPos = s.find_first_not_of(delimiters, pos);
+        pos = s.find_first_of(delimiters, lastPos);
+    }
+}
+
+TNode2 *Tree2::reconSerialTree2ByPreOrder(std::queue<std::string> &tokens)
+{
+    std::string str = tokens.front();
+
+    if (str == "#")
+    {
+        tokens.pop();
+        return nullptr;
+    }
+
+    TNode2 *node = new TNode2(std::stoi(str));
+    if (root == nullptr)
+    {
+        root = node;
+    }
+    tokens.pop();
+
+    node->l = reconSerialTree2ByPreOrder(tokens);
+    node->r = reconSerialTree2ByPreOrder(tokens);
+
+    if (node->l != nullptr)
+    {
+        node->l->p = node;
+    }
+
+    if (node->r != nullptr)
+    {
+        node->r->p = node;
+    }
+
+    return node;
+}
+
+// 图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图图
+/**
+ * from,to,weight=matrix[i][3]
+ */
+void DirectedGraph::addVertexEdge(const int matrix[][3], const int rows)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        int from = matrix[i][0];
+        int to = matrix[i][1];
+        int weight = matrix[i][2];
+
+        auto iterator = mapVertices.find(from);
+
+        if (iterator == mapVertices.end()) // 图中不会存储重复的顶点
+        {
+            mapVertices.insert({from, new Vertex(from)});
+        }
+
+        iterator = mapVertices.find(to);
+
+        if (iterator == mapVertices.end()) // 图中不会存储重复的顶点
+        {
+            mapVertices.insert({to, new Vertex(to)});
+        }
+
+        Vertex *vFrom = mapVertices.find(from)->second;
+        Vertex *vTo = mapVertices.find(to)->second;
+
+        Edge *e = new Edge(weight, vFrom, vTo);
+
+        setEdges.insert(e);
+        vFrom->out++;
+        vFrom->vertices.push_back(vTo);
+        vFrom->edges.push_back(e);
+        vTo->in++;
+    }
+}
+
+Vertex *DirectedGraph::findVertex(int value)
+{
+    auto iterator = mapVertices.find(value);
+    if (iterator != mapVertices.end())
+    {
+        return iterator->second;
+    }
+
+    return nullptr;
+}
+
+// 广度优先搜索Breadth First Search
+// 从根节点开始，沿着树的宽度遍历树的所有节点，如果树的所有节点都被访问，则终止
+// 尚未遍历的节点放入open容器（如queue），已遍历的节点放入closed容器（如set哈希表）
+void DirectedGraph::breadthFirstSearch(Vertex *v)
+{
+
+    if (v == nullptr)
+    {
+        return;
+    }
+
+    std::queue<Vertex *> q;         // open 表，如果更快的话，可以使用数组，改和查比哈希表更快一些
+    std::unordered_set<Vertex *> s; // closed 表
+
+    q.push(v);
+    s.insert(v);
+
+    std::cout << "Breadth First Search...\n";
+    while (!q.empty())
+    {
+        Vertex *cur = q.front(); // 从open表中弹出，开始处理
+        q.pop();
+
+        // 开始处理当前节点，如打印
+        std::cout << cur->value << " ";
+        // 结束处理当前节点
+
+        for (auto item : cur->vertices) // 对邻居顶点集合vector做遍历，没有进入过closed表的邻居进行处理
+        {
+            if (s.find(item) == s.end()) // closed表中没有，说明没有遍历或者访问过，则加入到open表和closed表中
+            {
+                q.push(item);
+                s.insert(item);
+            }
+        }
+    }
+    std::cout << "\nBreadth First Search End!\n";
+}
+
+void DirectedGraph::depthFirstSearch(Vertex *v)
+{
+    if (v == nullptr)
+    {
+        return;
+    }
+
+    std::stack<Vertex *> stack;
+    std::unordered_set<Vertex *> set;
+
+    stack.push(v);
+    set.insert(v);
+
+    std::cout << "\nDepth First Search...\n";
+    std::cout << v->value << " ";
+
+    while (!stack.empty())
+    {
+        Vertex *cur = stack.top();
+        stack.pop();
+
+        for (auto item : cur->vertices)
+        {
+            if (set.find(item) == set.end())
+            {
+                stack.push(cur);
+                stack.push(item);
+                set.insert(item);
+                std::cout << item->value << " ";
+                break;
+            }
+        }
+    }
+
+    std::cout << "\nDepth First Search End!\n";
+}
+
+// 有向图，且有入度为0的顶点，且没有环的图
+void DirectedGraph::topologySort()
+{
+    std::queue<Vertex *> q;
+
+    for (auto item : mapVertices) // 遍历图中的所有顶点，将入度为0的节点放入单独的队列q
+    {
+        if (item.second->in == 0)
+        {
+            q.push(item.second); // 找到入度为0的节点，放入单独的队列q中
+        }
+    }
+
+    std::cout << "\nTopology Sort...\n";
+
+    while (!q.empty())
+    {
+        Vertex *cur = q.front();
+        q.pop();
+
+        // 开始处理遍历结果，如打印
+        std::cout << cur << " ";
+        // 结束处理遍历结果，如打印
+
+        for (auto item : cur->vertices) // 遍历受其影响的所有邻居节点
+        {
+
+            item->in--; // 某个邻居的入度节点减一
+            if (item->in == 0)
+            {
+                q.push(item); // 入度为0的邻居节点放入队列q
+            }
+        }
+    }
+
+    std::cout << "\nTopology Sort Ends!\n";
+}
+
+TrieNode::TrieNode()
+{
+    pass = 0;
+    end = 0;
+    // for (int i = 0; i < 26; i++)
+    // {
+    //     next[i] = nullptr;
+    // }
+}
+
+Trie::Trie()
+{
+    root = new TrieNode();
+}
+
+void Trie::insert(std::string word)
+{
+    if (word == "")
+    {
+        return;
+    }
+
+    TrieNode *cur = root;
+    cur->pass++;
+
+    for (std::string::size_type i = 0; i < word.size(); i++)
+    {
+        int pos = word[i] - 'a';
+
+        if (cur->nodeMap.find(pos) == cur->nodeMap.end())
+        {
+            cur->nodeMap[pos] = new TrieNode();
+        }
+
+        // if (cur->next[pos] == nullptr)
+        // {
+        //     cur->next[pos] = new TrieNode();
+        // }
+
+        cur = cur->nodeMap[pos];
+        // cur = cur->next[pos];
+
+        cur->pass++;
+    }
+
+    cur->end++;
+}
+
+int Trie::search(std::string word)
+{
+    if (word == "")
+    {
+        return 0;
+    }
+
+    TrieNode *cur = root;
+
+    for (size_t i = 0; i < word.size(); i++)
+    {
+        int pos = word[i] - 'a';
+
+        // if (cur->next[pos] == nullptr)
+        if (cur->nodeMap.find(pos) == cur->nodeMap.end())
+        {
+            return 0;
+        }
+        // cur = cur->next[pos];
+        cur = cur->nodeMap[pos];
+    }
+
+    return cur->end; // bool变量也可以通过end值返回，search时必须有end不为0，如在apple中search app，应该返回false
+}
+
+int Trie::prefix(std::string word)
+{
+    if (word == "")
+    {
+        return 0;
+    }
+
+    TrieNode *cur = root;
+
+    for (size_t i = 0; i < word.size(); i++)
+    {
+        int pos = word[i] - 'a';
+
+        // if (cur->next[pos] == nullptr)
+        if (cur->nodeMap.find(pos) == cur->nodeMap.end())
+        {
+            return 0;
+        }
+        // cur = cur->next[pos];
+        cur = cur->nodeMap[pos];
+    }
+
+    return cur->pass; // bool变量，也可以通过这个pass值返回
+}
+
+void Trie::deleteWord(std::string word)
+{
+    if (search(word) == 0)
+    {
+        return;
+    }
+
+    TrieNode *cur = root;
+    --cur->pass;
+
+    TrieNode *parent = nullptr;
+    // int delIndex = -1;
+    std::queue<int> delQueue;
+
+    for (size_t i = 0; i < word.size(); i++)
+    {
+        int pos = word[i] - 'a';
+
+        // if (--cur->next[pos]->pass == 0) // pass--
+        if (--cur->nodeMap[pos]->pass == 0)
+        {
+            // cur->next[pos] = nullptr; // 如果降到0了，则直接nullptr，当做没有这个节点
+            // cur->nodeMap[pos] = nullptr;//指针为0，还是可以找到，并不是哈希表的end()
+
+            // cur->nodeMap.erase(pos);// 这里只是把这一个节点删除了，他后面的都还在，所以应该删除后续所有的节点
+            // return;
+
+            // 把第一次遇到的情况信息记录下来
+            // pass为0的点都需要删除，所以这里进行记录，最后统一删除
+            // 高级语言入java有GC回收机制，所以直接后面的全都可以自动回收，但是C++必须自己手动回收 
+            parent = parent == nullptr ? cur : parent;//parent不用每次都替换
+            //delIndex = delIndex == -1 ? pos : delIndex;
+            delQueue.push(pos);//孩子必须每次都入队列，最后需要用到parent和孩子的队列，进行递归删除
+        }
+
+        // cur = cur->next[pos]; // 指向当前的pos对应的位置，下一个循环继续处理他的下一个
+        cur = cur->nodeMap[pos];
+    }
+
+    --cur->end;
+
+    // 统一从parent开始（不一定是root），将所有pass为0的delQueue节点从nodeMap中删除
+    deleteZeroPassNode(parent, delQueue);
+}
+
+// 自己写的递归，逆着删除，牛逼得很
+void Trie::deleteZeroPassNode(TrieNode *cur, std::queue<int> &delQueue)
+{
+    if (delQueue.empty())
+    {
+        return;
+    }
+
+    int index = delQueue.front();
+    delQueue.pop();
+    deleteZeroPassNode(cur->nodeMap[index], delQueue);
+    cur->nodeMap.erase(index);
+}

@@ -48,7 +48,11 @@
         "cstring": "cpp",
         "map": "cpp",
         "chrono": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "unordered_set": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "queue": "cpp"
     },
     "cmake.configureOnOpen": false,
     "pasteImage.path": "${currentFileDir}/images",

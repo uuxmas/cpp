@@ -3,6 +3,8 @@
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
+#include <algorithm> //for std::copy, std::sort
+#include <ctime>
 #include "class.h"
 #include "utils.h"
 #include "sort.h"
@@ -118,7 +120,7 @@ Node *getLoopPoint(LinkList &myList);
  * 给定二叉树的根节点，以及二叉树上的两个节点node1， node2，
  * 求两个节点的最低位置的那个共同祖先
  */
-TNode * lowestCommonAncestor(TNode *root, TNode *node1, TNode *node2);
+TNode *lowestCommonAncestor(TNode *root, TNode *node1, TNode *node2);
 
 /**
  * 所有节点的父节点都一一对应起来，放入哈希表
@@ -129,3 +131,82 @@ void fatherMap(TNode *&node, std::unordered_map<TNode *, TNode *> &map);
  * 一个比较复杂难懂的最低共同祖先的递归
  */
 TNode *lowestCommonAncestorII(TNode *root, TNode *node1, TNode *node2);
+
+/**
+ * 打印折叠纸的凹痕和凸痕，N为折叠的次数，对折一次，则有一个凹痕，对折两次，则是凹 凹 凸
+ * i是进行到了第几次的折叠
+ */
+void paperFold(int N);
+void printFold(int i, int N, bool appear);
+
+/**
+ * 208. Implement Trie (Prefix Tree)
+ * 实现前缀树，在class.cpp中用类实现完毕了
+ * */
+
+/**
+ * 贪心算法，多个不同时间段的会议，如何安排可以安排的最多
+ * 谁结束早，谁在前面
+ */
+// 结束时间靠前的排前面，其中first是开始时间，second是结束时间
+class CompareMeetings
+{
+public:
+    bool operator()(const std::pair<int, int> &v1, const std::pair<int, int> &v2) const;
+};
+
+void endEarlyArrange(int timePoint, std::vector<std::pair<int, int>> &meetingVec);
+
+void meetingsArrage();
+
+/**
+ * 最小字典序dictionary order ，lowlexicographical order
+ */
+class CompareStrings
+{
+public:
+    bool operator()(const std::string &str1, const std::string &str2) const;
+};
+
+void lowString(std::vector<std::string> &stringVec);
+void stringSort();
+
+// 如何分割，cost最小
+// 如，最终需要10，20，30，如何把60进行最小cost的分割可以得到上述结果
+// 60--30,30,此时的cost是60，再把其中的一个30-->10,20，此时的cost是30
+// cost一共是60+30=90
+
+// 如果，60--10，50，此时cost是60，再把50--20，30，此时的cost是50
+// 虽然得到同样的10，20，30，但是cost一共是90+50=140，不是最优解
+int lessMoneySplit();
+
+// 给定最多的投资轮数，初始化启动资金，可选的投资的项目（启动资金+收益所组成）如何最大化收益
+class CompareCapital
+{
+public:
+    bool operator()(const std::pair<int, int> &p1, const std::pair<int, int> &p2) const;
+};
+
+class CompareProfit
+{
+public:
+    bool operator()(const std::pair<int, int> &p1, const std::pair<int, int> &p2) const;
+};
+
+int maxCapitalised();
+
+/**
+ * 使用大小根堆，快速实现中位数的查询，并返回中位数，
+ * 时间复杂度O(logN)
+ */
+double findMediumNumber();
+
+/**
+ * N 皇后问题
+ */
+void NQueens(int n);
+bool isValid(const std::vector<int> &record, int row, int colomn);
+int process(int i, std::vector<int> &record, int k);
+
+void NQueenII(int n);
+int NQueenIIProcess(int limit, int c, int l, int r);

@@ -1,0 +1,17 @@
+graph UndirectedGraph {
+subgraph cluster {
+label = "Undirected Graph with Weight";
+labelloc = t;
+bgcolor = beige;
+style = dashed;
+node [shape = circle, fontname = Helvetia, fontcolor = "#ffffff", style = filled, color = red, fillcolor = "#00334e", penwidth = 3,];
+edge [color = green, fontname = Helvetia, fontcolor = "#145374", penwidth = 3,];
+3--4 [label = 70];
+2--3 [label = 60];
+1--2 [label = 30];
+1--3 [label = 40];
+1--4 [label = 50];
+0--1 [label = 10];
+0--4 [label = 20];
+}
+}
